@@ -1,0 +1,18 @@
+[
+  {
+    "jd_name": "example_agoda_semantic_layer",
+    "jd_text": "PASTE A REAL JD YOU'VE ALREADY MANUALLY TAILORED FOR HERE",
+    "requirement": "Model governed metrics, dimensions, joins, and grain for business domains",
+    "expected_achievement_ids": ["ach_006", "ach_016", "ach_017"],
+    "expected_gap": false,
+    "notes": "Fill in with your own manually-verified ground truth. expected_achievement_ids should list the achievement ids you'd manually pick for this requirement; expected_gap=true means you'd honestly call this a gap rather than force a match."
+  },
+  {
+    "jd_name": "example_thai_fintech_dbt",
+    "jd_text": "PASTE ANOTHER REAL JD HERE",
+    "requirement": "dbt for data transformation and modeling",
+    "expected_achievement_ids": [],
+    "expected_gap": true,
+    "notes": "This is a known gap (no dbt experience) -- system should flag it, not force ach_005 or ach_006 to fit."
+  }
+]
