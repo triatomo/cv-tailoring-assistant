@@ -36,29 +36,55 @@ cross-encoder reranking, and a Corrective-RAG-style self-check loop applied to
 
 ## Setup
 
-1. Install dependencies:
+By default this runs entirely **free and local** -- no API subscription
+required. LLM calls go to a local model via [Ollama](https://ollama.com)
+instead of a paid API.
+
+1. Install [Ollama](https://ollama.com/download), then pull a model:
+   ```
+   ollama pull llama3.1:8b
+   ```
+   Ollama runs a local server automatically once installed -- no signup, no
+   API key, no per-token cost. Any tool-use-capable instruct model works;
+   `llama3.1:8b` is a reasonable default if your machine can run it.
+
+2. Install Python dependencies:
    ```
    pip install -r requirements.txt
    ```
 
-2. Start Qdrant locally:
+3. Start Qdrant locally:
    ```
    docker compose up -d
    ```
 
-3. Copy `.env.example` to `.env` and add your Anthropic API key:
+4. Copy `.env.example` to `.env` (the defaults already point to the free
+   local Ollama backend, no editing required unless you want to change the
+   model):
    ```
    cp .env.example .env
-   # edit .env and set ANTHROPIC_API_KEY
    ```
 
-4. Add your own achievements to `data/achievements/achievements.json`
+5. Add your own achievements to `data/achievements/achievements.json`
    (a starter set is already included -- edit/extend it with your real bullets).
 
-5. Index your achievements into Qdrant:
+6. Index your achievements into Qdrant:
    ```
    python src/embed.py
    ```
+
+### Switching to the paid Anthropic API later
+
+If local model quality isn't good enough (smaller local models are weaker
+at the structured-JSON classification and overclaim-checking steps than
+Claude), you can switch backends without touching any pipeline code:
+
+1. Uncomment `anthropic` in `requirements.txt` and run `pip install -r requirements.txt` again.
+2. In `.env`, set `LLM_BACKEND=anthropic` and `ANTHROPIC_API_KEY=<your key>`.
+
+Everything else (retrieval, embeddings, reranking) stays local and free
+either way -- only the three LLM-reasoning steps (classify, rewrite, verify)
+are affected by this switch.
 
 ## Running it
 

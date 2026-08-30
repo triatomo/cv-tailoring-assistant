@@ -5,12 +5,10 @@ using the LLM. This output is used downstream to bias retrieval (e.g., up-weight
 AI Engineer JD) and to drive the grounded-rewrite terminology substitution.
 """
 import json
-import os
 from typing import List
 from pydantic import BaseModel
-from anthropic import Anthropic
 
-MODEL = "claude-haiku-4-5-20251001"
+from llm_client import call_llm
 
 ROLE_CATEGORIES = [
     "AI/ML Engineer",
@@ -54,26 +52,28 @@ Respond with ONLY a JSON object, no other text, matching this exact shape:
 """
 
 
-def classify_jd(jd_text: str, client: Anthropic = None) -> JDClassification:
-    client = client or Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
-
+def classify_jd(jd_text: str) -> JDClassification:
     prompt = CLASSIFY_PROMPT.format(
         jd_text=jd_text,
         categories=", ".join(f'"{c}"' for c in ROLE_CATEGORIES),
     )
 
-    response = client.messages.create(
-        model=MODEL,
-        max_tokens=1024,
-        messages=[{"role": "user", "content": prompt}],
-    )
+    raw_text = call_llm(prompt, max_tokens=1024)
 
-    raw_text = response.content[0].text.strip()
-    # Defensive: strip markdown code fences if the model adds them anyway
+    # Defensive: strip markdown code fences if the model adds them anyway,
+    # and grab the first {...} block in case a local model adds chatter
+    # before/after the JSON (free local models are less obedient about
+    # "respond with ONLY JSON" than Claude tends to be).
+    raw_text = raw_text.strip()
     if raw_text.startswith("```"):
         raw_text = raw_text.strip("`")
         if raw_text.startswith("json"):
             raw_text = raw_text[4:].strip()
+
+    start = raw_text.find("{")
+    end = raw_text.rfind("}")
+    if start != -1 and end != -1:
+        raw_text = raw_text[start : end + 1]
 
     data = json.loads(raw_text)
     return JDClassification(**data)

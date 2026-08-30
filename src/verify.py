@@ -6,14 +6,11 @@ than Q&A -- it's the guardrail against overclaiming (new tools, inflated scope,
 inflated seniority) that got caught manually multiple times during CV tailoring.
 """
 import json
-import os
 from typing import List
 from pydantic import BaseModel
-from anthropic import Anthropic
 
 from rewrite import RewriteResult
-
-MODEL = "claude-haiku-4-5-20251001"
+from llm_client import call_llm
 
 VERIFY_PROMPT = """You are fact-checking a rewritten CV bullet against its original source
 to catch overclaiming.
@@ -50,9 +47,7 @@ class VerificationResult(BaseModel):
     recommendation: str
 
 
-def verify_rewrite(rewrite_result: RewriteResult, client: Anthropic = None) -> VerificationResult:
-    client = client or Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
-
+def verify_rewrite(rewrite_result: RewriteResult) -> VerificationResult:
     # If the rewrite is byte-identical to the original, skip the LLM call --
     # nothing to verify, it's trivially supported.
     if rewrite_result.rewritten_text.strip() == rewrite_result.original_text.strip():
@@ -63,17 +58,16 @@ def verify_rewrite(rewrite_result: RewriteResult, client: Anthropic = None) -> V
         rewritten_text=rewrite_result.rewritten_text,
     )
 
-    response = client.messages.create(
-        model=MODEL,
-        max_tokens=512,
-        messages=[{"role": "user", "content": prompt}],
-    )
-
-    raw_text = response.content[0].text.strip()
+    raw_text = call_llm(prompt, max_tokens=512).strip()
     if raw_text.startswith("```"):
         raw_text = raw_text.strip("`")
         if raw_text.startswith("json"):
             raw_text = raw_text[4:].strip()
+
+    start = raw_text.find("{")
+    end = raw_text.rfind("}")
+    if start != -1 and end != -1:
+        raw_text = raw_text[start : end + 1]
 
     data = json.loads(raw_text)
     return VerificationResult(**data)

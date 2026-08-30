@@ -1,6 +1,10 @@
 sentence-transformers>=3.0.0
 qdrant-client>=1.9.0
 rank_bm25>=0.2.2
-anthropic>=0.34.0
+requests>=2.31.0
 python-dotenv>=1.0.0
 pydantic>=2.7.0
+
+# Only needed if you switch LLM_BACKEND=anthropic (paid API) instead of the
+# free default (LLM_BACKEND=ollama, local). Uncomment if/when you use it:
+# anthropic>=0.34.0

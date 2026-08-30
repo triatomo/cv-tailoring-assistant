@@ -4,13 +4,10 @@ terminology, under a strict constraint against introducing unsupported claims.
 This is the piece that solves "I have the experience but need to use the JD's
 words" -- WITHOUT letting the model invent tools/scope that weren't there.
 """
-import os
 from pydantic import BaseModel
-from anthropic import Anthropic
 
 from ingest import Achievement
-
-MODEL = "claude-haiku-4-5-20251001"
+from llm_client import call_llm
 
 REWRITE_PROMPT = """You are helping tailor a CV bullet point to match a job description's
 terminology, WITHOUT changing what actually happened.
@@ -45,23 +42,14 @@ def rewrite_achievement(
     achievement: Achievement,
     requirement: str,
     terminology: list,
-    client: Anthropic = None,
 ) -> RewriteResult:
-    client = client or Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
-
     prompt = REWRITE_PROMPT.format(
         original_text=achievement.text,
         terminology=", ".join(terminology) if terminology else "(none provided)",
         requirement=requirement,
     )
 
-    response = client.messages.create(
-        model=MODEL,
-        max_tokens=512,
-        messages=[{"role": "user", "content": prompt}],
-    )
-
-    rewritten = response.content[0].text.strip().strip('"')
+    rewritten = call_llm(prompt, max_tokens=512).strip().strip('"')
     return RewriteResult(original_text=achievement.text, rewritten_text=rewritten)
 
 

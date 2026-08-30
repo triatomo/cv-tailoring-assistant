@@ -12,7 +12,7 @@
     "company": "Klarna Bank AB",
     "role": "AI Platform Engineer",
     "date_range": "01/2026 - Present",
-    "text": "Built and maintained end-to-end MLOps pipelines on Python and Airflow, spanning data preprocessing, LLM-based labeling, model training, evaluation, and serving, to improve catalog accuracy across Klarna's shopping experience.",
+    "text": "Automated product data enrichment by building and maintaining end-to-end MLOps pipelines on Python and Airflow, spanning data preprocessing, LLM-based labeling, model training, evaluation, and serving, to improve catalog accuracy across Klarna's shopping experience.",
     "tags": ["mlops", "pipeline", "llm", "airflow", "python"]
   },
   {
@@ -28,7 +28,7 @@
     "company": "Klarna Bank AB",
     "role": "Data Engineer",
     "date_range": "12/2021 - 01/2026",
-    "text": "Designed and maintained production-grade ETL pipelines in Python and SQL Redshift, orchestrated with Airflow and validated through pytest-based unit and integration tests, delivering trusted, analytics-ready datasets for regulatory reporting and cross-market business expansion.",
+    "text": "Designed and maintained production-grade ETL pipelines in Python and SQL Redshift, orchestrated with Airflow and validated through pytest-based unit and integration tests, delivering trusted, analytics-ready datasets for regulatory reporting and cross-market business expansion while adhering to GDPR regulations, supporting Klarna’s market launches and banking license requirements.",
     "tags": ["etl", "pipeline", "sql", "redshift", "airflow", "testing", "regulatory"]
   },
   {
@@ -36,7 +36,7 @@
     "company": "Klarna Bank AB",
     "role": "Data Engineer",
     "date_range": "12/2021 - 01/2026",
-    "text": "Contributed to the design of a standardized, modular data processing platform across pipelines, leveraging Apache Flink (streaming) and Spark (batch) based on processing needs. Reduced infrastructure setup time and team alignment overhead by 75%.",
+    "text": "Co-designed a standardized, modular data processing platform across pipelines, leveraging Apache Flink (streaming) and Spark (batch) based on processing needs, with Spock-driven test coverage across shared components. Reduced infrastructure setup time and team alignment overhead by 75%, improved service consistency and governance, and enabled engineers to focus on business logic rather than foundational components.",
     "tags": ["platform", "flink", "spark", "streaming", "batch", "standardization"]
   },
   {
@@ -52,7 +52,7 @@
     "company": "Klarna Bank AB",
     "role": "Data Engineer",
     "date_range": "12/2021 - 01/2026",
-    "text": "Built and maintained API endpoints that exposed curated debt lifecycle and credit status insights from Redshift-backed data models to downstream systems and stakeholders. Optimized query performance, implemented caching strategies, and ensured consistent response times under concurrent access.",
+    "text": "Developed data-processing applications with Apache Spark and AWS Glue integrating diverse data sources — including Kafka for streaming events and GraphQL APIs for on-demand data retrieval — with the goal of enhancing customer credit history management through automated reporting, reducing relative unpaid delinquency rates by 20% and increasing more than 10% of purchasing active users in a month.",
     "tags": ["api", "service", "redshift", "caching", "performance", "multi-consumer"]
   },
   {
@@ -60,7 +60,7 @@
     "company": "Klarna Bank AB",
     "role": "Data Engineer",
     "date_range": "12/2021 - 01/2026",
-    "text": "Designed and built a Flask REST API to automate secure file transfers between processing and submission services, deployed as a Dockerized solution on EC2, reducing operational workload by 6 hours per week.",
+    "text": "Designed and built a Flask REST API to automate secure file transfers between processing and submission services, deployed as a Dockerized solution on EC2 to meet a client's stringent financial regulatory requirements, reducing operational workload by 6 hours per week and eliminating manual errors through improved automation and logging.",
     "tags": ["api", "flask", "docker", "ec2", "automation"]
   },
   {
