@@ -9,6 +9,9 @@ from qdrant_client import QdrantClient
 from qdrant_client.models import Distance, VectorParams, PointStruct
 
 from ingest import Achievement, load_achievements
+import logging
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 
 COLLECTION_NAME = "achievements"
 EMBEDDING_MODEL = "BAAI/bge-small-en-v1.5"
@@ -64,10 +67,17 @@ def embed_and_index(achievements: List[Achievement], client: QdrantClient, model
 
 
 def run():
+    logging.info("Loading achievements...")
     achievements = load_achievements()
+    logging.info(f"Loaded {len(achievements)} achievements.")
+    logging.info("Loading embedding model...")
     model = SentenceTransformer(EMBEDDING_MODEL)
+    logging.info(f"Loaded embedding model '{EMBEDDING_MODEL}'.")
+    logging.info("Getting Qdrant client...")
     client = get_qdrant_client()
+    logging.info("Ensuring collection...")
     ensure_collection(client)
+    logging.info("Embedding and indexing achievements...")
     embed_and_index(achievements, client, model)
 
 

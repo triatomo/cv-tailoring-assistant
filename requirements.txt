@@ -5,6 +5,12 @@ requests>=2.31.0
 python-dotenv>=1.0.0
 pydantic>=2.7.0
 
+# Pinned: sentence-transformers pulls in PyTorch, which (depending on the
+# resolved version) can be incompatible with NumPy 2.x, causing
+# "RuntimeError: Numpy is not available" at embed/inference time. Pinning
+# below 2.0 avoids that failure mode.
+numpy<2
+
 # Only needed if you switch LLM_BACKEND=anthropic (paid API) instead of the
 # free default (LLM_BACKEND=ollama, local). Uncomment if/when you use it:
 # anthropic>=0.34.0
