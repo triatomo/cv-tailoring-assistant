@@ -1,10 +1,11 @@
 """
-Entry point: takes a JD (file path or pasted text), runs the full pipeline,
-and outputs a structured tailored draft (matched + rewritten bullets grouped
-by requirement, plus an honest gap list) as markdown.
+Entry point: takes a JD (text file, PDF file, or pasted text), runs the full
+pipeline, and outputs a structured tailored draft (matched + rewritten bullets
+grouped by requirement, plus an honest gap list) as markdown.
 
 Usage:
     python src/cli.py --jd path/to/jd.txt
+    python src/cli.py --jd path/to/jd.pdf
     python src/cli.py --jd-text "paste the JD text directly"
 """
 import argparse
@@ -24,12 +25,39 @@ from embed import EMBEDDING_MODEL
 load_dotenv()
 
 
+def _read_pdf_text(path: Path) -> str:
+    """Extract plain text from a PDF file using pypdf."""
+    try:
+        from pypdf import PdfReader
+    except ImportError:
+        print(
+            "Error: reading PDF files requires the 'pypdf' package. "
+            "Install it with: pip install pypdf",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
+    reader = PdfReader(str(path))
+    text = "\n".join(page.extract_text() or "" for page in reader.pages)
+
+    if not text.strip():
+        print(
+            f"Warning: no extractable text found in {path}. "
+            "The PDF may be scanned/image-based rather than text-based -- "
+            "in that case, paste the JD text manually via --jd-text instead.",
+            file=sys.stderr,
+        )
+    return text
+
+
 def read_jd_text(args) -> str:
     if args.jd:
         path = Path(args.jd)
         if not path.exists():
             print(f"Error: JD file not found: {args.jd}", file=sys.stderr)
             sys.exit(1)
+        if path.suffix.lower() == ".pdf":
+            return _read_pdf_text(path)
         return path.read_text(encoding="utf-8")
     return args.jd_text
 

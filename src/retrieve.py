@@ -55,8 +55,12 @@ def _vector_search(query: str, model: SentenceTransformer, top_k: int) -> List[s
         f"Represent this sentence for searching relevant passages: {query}",
         normalize_embeddings=True,
     )
-    hits = client.search(collection_name=COLLECTION_NAME, query_vector=query_vec.tolist(), limit=top_k)
-    return [hit.payload["achievement_id"] for hit in hits]
+    results = client.query_points(
+        collection_name=COLLECTION_NAME,
+        query=query_vec.tolist(),
+        limit=top_k,
+    )
+    return [point.payload["achievement_id"] for point in results.points]
 
 
 def _reciprocal_rank_fusion(ranked_lists: List[List[str]], k: int = RRF_K) -> Dict[str, float]:

@@ -1,9 +1,10 @@
 sentence-transformers>=3.0.0
-qdrant-client>=1.9.0
+qdrant-client>=1.15.0,<2.0.0
 rank_bm25>=0.2.2
 requests>=2.31.0
 python-dotenv>=1.0.0
 pydantic>=2.7.0
+pypdf>=4.0.0
 
 # Pinned: sentence-transformers pulls in PyTorch, which (depending on the
 # resolved version) can be incompatible with NumPy 2.x, causing

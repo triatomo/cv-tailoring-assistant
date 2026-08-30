@@ -18,6 +18,7 @@ import requests
 LLM_BACKEND = os.getenv("LLM_BACKEND", "ollama")  # "ollama" or "anthropic"
 OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "llama3.1:8b")
 OLLAMA_HOST = os.getenv("OLLAMA_HOST", "http://localhost:11434")
+OLLAMA_TIMEOUT = int(os.getenv("OLLAMA_TIMEOUT", "300"))
 ANTHROPIC_MODEL = os.getenv("ANTHROPIC_MODEL", "claude-haiku-4-5-20251001")
 
 
@@ -37,7 +38,7 @@ def _call_ollama(prompt: str, max_tokens: int) -> str:
             "stream": False,
             "options": {"num_predict": max_tokens},
         },
-        timeout=120,
+        timeout=OLLAMA_TIMEOUT,
     )
     response.raise_for_status()
     return response.json()["response"].strip()
