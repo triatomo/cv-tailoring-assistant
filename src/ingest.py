@@ -16,6 +16,7 @@ class Achievement(BaseModel):
     date_range: str
     text: str
     tags: List[str]
+    highlights: List[str] = []  # phrases rendered in bold on the CV, kept verbatim by rewrites
 
 
 def load_achievements(path: str = "data/achievements/achievements.json") -> List[Achievement]:

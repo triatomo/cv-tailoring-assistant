@@ -32,7 +32,18 @@ cross-encoder reranking, and a Corrective-RAG-style self-check loop applied to
 7. **Gaps** (`src/gaps.py`) -- for requirements with no strong retrieval match,
   outputs an honest gap statement (with the closest adjacent experience, if any)
    instead of forcing a weak bullet to fit.
-8. **CLI** (`src/cli.py`) -- wires all of the above together into one command.
+8. **Summary** (`src/summary.py`) -- writes a per-JD headline and profile
+  summary grounded in your achievements, skills, and default summary. A
+   second LLM call checks it for overclaiming; if anything is flagged, the
+   default summary from `data/profile.json` is used instead.
+9. **Render** (`src/render_cv.py`, `src/templates/cv.html.j2`) -- lays out the
+  CV as HTML and prints it to PDF with headless Chrome. Page 1: summary plus the
+   roles marked `"page": 1` in `data/profile.json` (AI Engineer, Data Engineer),
+   filled with the most JD-relevant bullets; if page 1 overflows, the least
+   relevant bullets are dropped (down to each role's `min_bullets`). Page 2:
+   the remaining roles, education, skills. Phrases listed in an achievement's
+   `highlights` are rendered in bold.
+10. **CLI** (`src/cli.py`) -- wires all of the above together into one command.
 
 
 
@@ -62,6 +73,10 @@ instead of a paid API.
    model):
 5. Add your own achievements to `data/achievements/achievements.json`
   (a starter set is already included -- edit/extend it with your real bullets).
+   Each achievement's `company` + `role` must match an entry in
+   `data/profile.json`, which holds the rest of the CV (header, role order and
+   page, education, skills). Rendering the PDF needs Google Chrome (set
+   `CHROME_PATH` if it is not in `/Applications`).
 6. Index your achievements into Qdrant:
   ```
    python src/embed.py
@@ -83,12 +98,20 @@ either way -- only the three LLM-reasoning steps (classify, rewrite, verify)
 are affected by this switch.
 
 ## Running it
+Make sure the virtual env is activated
+```
+source venv/bin/activate
+```
 
 Against a JD in a file:
 
 ```
-python src/cli.py --jd data/jds/some_job.txt --out output.md
+python src/cli.py --jd local/jd/AIEngineer.pdf --out local/output/AIEngineer.md
 ```
+
+This writes the CV to `local/output/AIEngineer.pdf` (+ `.html`) and the review
+notes (rewrites, bullets dropped to fit page 1, gaps) to the `.md`. Use
+`--cv path.pdf` to put the CV somewhere else.
 
 Against pasted JD text:
 
@@ -115,7 +138,7 @@ gap detection correctly distinguish real gaps from real matches.
 
 - No agent harness runtime, sandboxing, or multi-tenancy.
 - No GraphRAG / knowledge graph.
-- No frontend -- CLI/markdown output only.
+- No frontend -- CLI output only (PDF/HTML CV + markdown review notes).
 - Output is a **draft for review**, not a finished CV -- always read the gap
 list and spot-check rewrites before using anything in a real application.
 - The role-category tag boost table (`ROLE_TAG_BOOSTS` in `retrieve.py`) is a

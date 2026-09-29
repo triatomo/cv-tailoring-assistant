@@ -2,26 +2,29 @@
   {
     "id": "ach_001",
     "company": "Klarna Bank AB",
-    "role": "AI Platform Engineer",
+    "role": "AI Engineer",
     "date_range": "01/2026 - Present",
     "text": "Designed and built LLM-powered AI agents (the agentic fixing tool) that let non-engineering teams autonomously fix product data, covering tool interface design, prompt engineering, and self-correction loops for production reliability, eliminating engineering tickets and delivering an estimated $1M in annual financial impact.",
-    "tags": ["llm", "agent", "prompt-engineering", "production-ai"]
+    "tags": ["llm", "agent", "prompt-engineering", "production-ai"],
+    "highlights": ["delivering an estimated $1M in annual financial impact"]
   },
   {
     "id": "ach_002",
     "company": "Klarna Bank AB",
-    "role": "AI Platform Engineer",
+    "role": "AI Engineer",
     "date_range": "01/2026 - Present",
     "text": "Automated product data enrichment by building and maintaining end-to-end MLOps pipelines on Python and Airflow, spanning data preprocessing, LLM-based labeling, model training, evaluation, and serving, to improve catalog accuracy across Klarna's shopping experience.",
-    "tags": ["mlops", "pipeline", "llm", "airflow", "python"]
+    "tags": ["mlops", "pipeline", "llm", "airflow", "python"],
+    "highlights": ["improve catalog accuracy across Klarna's shopping experience"]
   },
   {
     "id": "ach_003",
     "company": "Klarna Bank AB",
-    "role": "AI Platform Engineer",
+    "role": "AI Engineer",
     "date_range": "01/2026 - Present",
-    "text": "Own LLMOps observability and reliability for production ML serving on Kubernetes, monitored via Argo and Datadog, including a postprocessing pipeline refactor that cut production API response time by ~80% (p50: 33ms -> 6ms).",
-    "tags": ["llmops", "observability", "kubernetes", "monitoring", "performance"]
+    "text": "Own LLMOps observability and reliability for production ML serving on Kubernetes (models served via Triton Inference Server), monitored via Argo and Datadog, including a postprocessing pipeline refactor that cut production API response time by ~80% (p50: 33ms -> 6ms).",
+    "tags": ["llmops", "observability", "kubernetes", "monitoring", "performance", "triton", "model-serving"],
+    "highlights": ["cut production API response time by ~80% (p50: 33ms -> 6ms)"]
   },
   {
     "id": "ach_004",
@@ -29,7 +32,8 @@
     "role": "Data Engineer",
     "date_range": "12/2021 - 01/2026",
     "text": "Designed and maintained production-grade ETL pipelines in Python and SQL Redshift, orchestrated with Airflow and validated through pytest-based unit and integration tests, delivering trusted, analytics-ready datasets for regulatory reporting and cross-market business expansion while adhering to GDPR regulations, supporting Klarna’s market launches and banking license requirements.",
-    "tags": ["etl", "pipeline", "sql", "redshift", "airflow", "testing", "regulatory"]
+    "tags": ["etl", "pipeline", "sql", "redshift", "airflow", "testing", "regulatory"],
+    "highlights": ["supporting Klarna’s market launches and banking license requirements"]
   },
   {
     "id": "ach_005",
@@ -37,7 +41,8 @@
     "role": "Data Engineer",
     "date_range": "12/2021 - 01/2026",
     "text": "Co-designed a standardized, modular data processing platform across pipelines, leveraging Apache Flink (streaming) and Spark (batch) based on processing needs, with Spock-driven test coverage across shared components. Reduced infrastructure setup time and team alignment overhead by 75%, improved service consistency and governance, and enabled engineers to focus on business logic rather than foundational components.",
-    "tags": ["platform", "flink", "spark", "streaming", "batch", "standardization"]
+    "tags": ["platform", "flink", "spark", "streaming", "batch", "standardization"],
+    "highlights": ["standardized, modular data processing platform", "Apache Flink (streaming)", "Spark (batch)", "Reduced infrastructure setup time and team alignment overhead by 75%", "improved service consistency"]
   },
   {
     "id": "ach_006",
@@ -53,7 +58,8 @@
     "role": "Data Engineer",
     "date_range": "12/2021 - 01/2026",
     "text": "Developed data-processing applications with Apache Spark and AWS Glue integrating diverse data sources — including Kafka for streaming events and GraphQL APIs for on-demand data retrieval — with the goal of enhancing customer credit history management through automated reporting, reducing relative unpaid delinquency rates by 20% and increasing more than 10% of purchasing active users in a month.",
-    "tags": ["api", "service", "redshift", "caching", "performance", "multi-consumer"]
+    "tags": ["api", "service", "redshift", "caching", "performance", "multi-consumer"],
+    "highlights": ["reducing relative unpaid delinquency rates by 20%"]
   },
   {
     "id": "ach_008",
@@ -61,7 +67,8 @@
     "role": "Data Engineer",
     "date_range": "12/2021 - 01/2026",
     "text": "Designed and built a Flask REST API to automate secure file transfers between processing and submission services, deployed as a Dockerized solution on EC2 to meet a client's stringent financial regulatory requirements, reducing operational workload by 6 hours per week and eliminating manual errors through improved automation and logging.",
-    "tags": ["api", "flask", "docker", "ec2", "automation"]
+    "tags": ["api", "flask", "docker", "ec2", "automation"],
+    "highlights": ["reducing operational workload by 6 hours per week and eliminating manual errors"]
   },
   {
     "id": "ach_009",
@@ -69,7 +76,8 @@
     "role": "Data Engineer",
     "date_range": "12/2021 - 01/2026",
     "text": "Reduced incident response time by implementing data validation and end-to-end monitoring, integrating AWS CloudWatch metrics with Datadog dashboards and Slack notifications for real-time visibility across automated workflows.",
-    "tags": ["monitoring", "observability", "cloudwatch", "datadog", "data-quality"]
+    "tags": ["monitoring", "observability", "cloudwatch", "datadog", "data-quality"],
+    "highlights": ["Reduced incident response time", "real-time visibility across automated workflows"]
   },
   {
     "id": "ach_010",
@@ -77,7 +85,8 @@
     "role": "Data Engineer",
     "date_range": "12/2021 - 01/2026",
     "text": "Partnered with internal data consumers as the go-to domain expert on a dedicated Slack channel, clarifying metric definitions, data lineage, and business logic behind debt reporting datasets so stakeholders could trust the data they relied on.",
-    "tags": ["stakeholder", "governance", "domain-expertise", "communication"]
+    "tags": ["stakeholder", "governance", "domain-expertise", "communication"],
+    "highlights": ["stakeholders could trust the data they relied on"]
   },
   {
     "id": "ach_011",
@@ -85,7 +94,8 @@
     "role": "Data Scientist",
     "date_range": "01/2020 - 05/2022",
     "text": "Translated business and risk requirements into scalable data transformations, enabling expansion into three new markets and supporting 133% average volume increase (EUR 74.05M), and powering phishing detection automation with a 5,000% increase in URL reviews per year.",
-    "tags": ["data-science", "risk", "translation", "stakeholder", "fraud"]
+    "tags": ["data-science", "risk", "translation", "stakeholder", "fraud"],
+    "highlights": ["133% average volume increase", "5,000% increase in URL reviews per year"]
   },
   {
     "id": "ach_012",
@@ -93,7 +103,8 @@
     "role": "Data Scientist",
     "date_range": "01/2020 - 05/2022",
     "text": "Collaborated with engineering and analytics stakeholders to improve transaction acceptance and fraud detection metrics through data-driven experimentation and model integration.",
-    "tags": ["experimentation", "fraud", "collaboration", "modeling"]
+    "tags": ["experimentation", "fraud", "collaboration", "modeling"],
+    "highlights": ["improve transaction acceptance and fraud detection metrics"]
   },
   {
     "id": "ach_013",
@@ -101,7 +112,8 @@
     "role": "Data Scientist",
     "date_range": "01/2020 - 05/2022",
     "text": "Automated credit bureau reporting by designing and maintaining Redshift-based transformation workflows orchestrated with Airflow, reducing lookup costs by up to 20%.",
-    "tags": ["automation", "redshift", "airflow", "cost-reduction"]
+    "tags": ["automation", "redshift", "airflow", "cost-reduction"],
+    "highlights": ["reducing lookup costs by up to 20%"]
   },
   {
     "id": "ach_014",
@@ -109,7 +121,8 @@
     "role": "Data Scientist",
     "date_range": "01/2020 - 05/2022",
     "text": "Led the migration of a centralized lookup and caching service, preventing cost duplication, improving data consistency, and reducing timeouts by 11%.",
-    "tags": ["migration", "caching", "leadership", "reliability"]
+    "tags": ["migration", "caching", "leadership", "reliability"],
+    "highlights": ["preventing cost duplication", "improving data consistency", "reducing timeouts by 11%"]
   },
   {
     "id": "ach_015",
@@ -145,11 +158,12 @@
   },
   {
     "id": "ach_019",
-    "company": "Working Student Engineering",
-    "role": "Working Student",
+    "company": "Klarna Bank AB",
+    "role": "Working Student Engineering",
     "date_range": "07/2019 - 01/2020",
     "text": "Contributed to a machine learning initiative aimed at user identification, resulting in a 6% increase in identified customers. Supported migration between financial risk platforms by implementing business logic, writing unit tests, and validating node changes through deployment stages.",
-    "tags": ["machine-learning", "testing", "migration"]
+    "tags": ["machine-learning", "testing", "migration"],
+    "highlights": ["6% increase in identified customers"]
   },
   {
     "id": "ach_020",
@@ -157,7 +171,8 @@
     "role": "Working Student Business Development",
     "date_range": "10/2018 - 05/2019",
     "text": "Streamlined data workflows and reporting by automating processes in Looker, Excel, and VBA, reducing team workload by 5 hours weekly while improving invoicing accuracy. Designed real-time dashboards and scheduled reports for stakeholders.",
-    "tags": ["looker", "vba", "reporting", "dashboards", "automation"]
+    "tags": ["looker", "vba", "reporting", "dashboards", "automation"],
+    "highlights": ["reducing team workload by 5 hours weekly"]
   },
   {
     "id": "ach_021",
@@ -166,5 +181,14 @@
     "date_range": "2026",
     "text": "Built a near real-time analytics data pipeline streaming Postgres changes through Debezium (CDC), Kafka, and Spark into a FastAPI serving layer, built from a blank repo without relying on any company tooling.",
     "tags": ["cdc", "kafka", "spark", "fastapi", "side-project", "streaming"]
+  },
+  {
+    "id": "ach_022",
+    "company": "Klarna Bank AB",
+    "role": "AI Engineer",
+    "date_range": "01/2026 - Present",
+    "text": "Reduced LLM inference costs by consolidating multiple field predictions into a single LLM call per product, and by implementing perceptual hashing (dHash) and pixel-rank deduplication to filter redundant images before they reached the LLM for evaluation, cutting the volume of costly multi-modal inference calls.",
+    "tags": ["llm", "cost-reduction", "multi-modal", "deduplication", "production-ai"],
+    "highlights": ["cutting the volume of costly multi-modal inference calls"]
   }
 ]

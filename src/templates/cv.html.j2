@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>{{ profile.name }} - CV</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  @page { size: Letter; margin: 0.55in 0.6in 0.5in 0.6in; }
+  :root { --accent: #13806f; --text: #111; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Poppins", "Helvetica Neue", Arial, sans-serif;
+    font-weight: 300;
+    font-size: 9.6pt;
+    line-height: 1.28;
+    color: var(--text);
+  }
+  strong { font-weight: 600; }
+  h1 { color: var(--accent); font-size: 21pt; font-weight: 700; margin: 0 0 2pt; }
+  .contact { font-size: 9.6pt; margin-bottom: 16pt; }
+  .headline { font-size: 11.5pt; font-weight: 600; margin: 0 0 14pt; }
+  .summary { margin: 0 0 16pt; }
+  .section-title {
+    color: var(--accent); font-size: 9.6pt; font-weight: 300; text-transform: uppercase;
+    letter-spacing: 0.02em; margin: 0 0 9pt;
+  }
+  .company { font-size: 11pt; font-weight: 600; margin: 0; }
+  .role-row { display: flex; justify-content: space-between; align-items: baseline; margin: 0 0 3pt; }
+  .role-title { font-size: 11pt; font-weight: 600; }
+  .role-meta { font-size: 9.6pt; font-weight: 600; white-space: nowrap; }
+  .role { margin-bottom: 8pt; break-inside: avoid-page; }
+  .role.new-company { margin-top: 2pt; }
+  ul { margin: 0; padding-left: 18pt; }
+  li { margin: 0 0 1.5pt; }
+  .page-break { break-before: page; }
+  .edu { margin-bottom: 7pt; }
+  .edu-degree { font-size: 11pt; font-weight: 600; }
+  .edu-row { display: flex; justify-content: space-between; font-size: 10.5pt; margin-bottom: 5pt; }
+  .edu-thesis { font-size: 9.6pt; }
+  .section { margin-top: 16pt; }
+  .skills p { margin: 0 0 9pt; }
+</style>
+</head>
+<body>
+  <h1>{{ profile.name }}</h1>
+  <div class="contact">{{ profile.contact | join(" • ") }}</div>
+  <div class="headline">{{ headline }}</div>
+  <div class="summary">{{ summary | bold_markdown }}</div>
+
+  <div class="section-title">Work Experience</div>
+  {% set ns = namespace(prev_company=None, prev_page=1) %}
+  {% for role in roles %}
+    {% set new_company = role.company != ns.prev_company %}
+    <div class="role{% if new_company %} new-company{% endif %}{% if role.page != ns.prev_page %} page-break{% endif %}">
+      {% if new_company %}<div class="company">{{ role.company }}</div>{% endif %}
+      <div class="role-row">
+        <span class="role-title">{{ role.role }}</span>
+        <span class="role-meta">{{ role.location }} • {{ role.date_range }}</span>
+      </div>
+      <ul>
+      {% for bullet in role.bullets %}
+        <li>{{ bullet | render_bullet }}</li>
+      {% endfor %}
+      </ul>
+    </div>
+    {% set ns.prev_company = role.company %}
+    {% set ns.prev_page = role.page %}
+  {% endfor %}
+
+  {% if not page_one_only %}
+  <div class="section">
+    <div class="section-title">Education</div>
+    {% for edu in profile.education %}
+    <div class="edu">
+      <div class="edu-degree">{{ edu.degree }}</div>
+      <div class="edu-row"><span>{{ edu.school }}</span><span>{{ edu.date_range }}</span></div>
+      {% if edu.thesis %}<div class="edu-thesis">Thesis: "{{ edu.thesis }}"</div>{% endif %}
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="section skills">
+    <div class="section-title">Skills</div>
+    <p>{{ profile.skills | join(", ") }}</p>
+    {% if profile.hobbies %}<p><strong>Hobbies:</strong> {{ profile.hobbies }}</p>{% endif %}
+  </div>
+  {% endif %}
+</body>
+</html>

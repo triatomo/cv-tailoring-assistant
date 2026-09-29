@@ -1,0 +1,68 @@
+{
+  "name": "Restria Hertomo",
+  "contact": ["triahertomo.me", "restria.hertomo@gmail.com", "Relocating to Spain or Bangkok"],
+  "default_headline": "Data Engineer - AI Platform",
+  "default_summary": "Data Engineer with 5+ years building scalable batch and real-time pipelines, and since 2026, the platform layer for production AI/ML systems — **LLM-powered agent tooling** using **pydantic-AI** and **OpenAI SDK**, **ML pipeline** reliability, and **AI** workflow observability. Strong in **SQL** and **ETL/ELT** on **AWS (Glue, EC2, Lambda, Redshift, SageMaker)**, **Airflow**, **Flink**, **Spark**, **Iceberg**, and **Kafka**, with a DevOps-oriented approach to **CI/CD**, **IaC**, and testing (**pytest**). Translates business and regulatory requirements into consistent, reusable data transformations — partnering closely with financial analysts and legal teams to keep metrics accurate across markets. Autonomous and curious, comfortable solving ambiguous problems with minimal supervision in fast-moving environments.",
+  "experience": [
+    {
+      "company": "Klarna Bank AB",
+      "role": "AI Engineer",
+      "location": "Berlin",
+      "date_range": "01/2026 - Present",
+      "page": 1,
+      "min_bullets": 2,
+      "max_bullets": 4
+    },
+    {
+      "company": "Klarna Bank AB",
+      "role": "Data Engineer",
+      "location": "Berlin",
+      "date_range": "12/2021 - 01/2026",
+      "page": 1,
+      "min_bullets": 3,
+      "max_bullets": 6
+    },
+    {
+      "company": "Klarna Bank AB",
+      "role": "Data Scientist",
+      "location": "Berlin",
+      "date_range": "01/2020 - 05/2022",
+      "page": 2
+    },
+    {
+      "company": "Klarna Bank AB",
+      "role": "Working Student Engineering",
+      "location": "Berlin",
+      "date_range": "07/2019 - 01/2020",
+      "page": 2
+    },
+    {
+      "company": "Seven Senders",
+      "role": "Working Student Business Development",
+      "location": "Berlin",
+      "date_range": "10/2018 - 05/2019",
+      "page": 2
+    }
+  ],
+  "education": [
+    {
+      "degree": "Master of Science (M.Sc.) in Industrial Engineering",
+      "school": "Technische Universität Berlin",
+      "date_range": "01/2015 - 12/2017",
+      "thesis": "Improving Delivery Time with Machine Learning: A Case Study in E-Commerce"
+    },
+    {
+      "degree": "Bachelor of Science (B.Sc.) in Industrial Engineering",
+      "school": "Technische Universität Berlin",
+      "date_range": "01/2010 - 12/2015",
+      "thesis": "Eine Diskussion über die Kapitalverkehrskontrolle vor dem Hintergrund der Asienkrise"
+    }
+  ],
+  "skills": [
+    "Apache Airflow", "Apache Flink", "Apache Iceberg", "Apache Spark", "AWS Glue", "Big data Analytics",
+    "Datadog", "Docker", "EC2", "Flask", "GitHub", "Google Cloud Platform", "GraphQL", "Java", "Jenkins",
+    "Kafka", "Lambda", "Looker", "NGINX", "OpenAI SDK", "pydantic-AI", "pytest", "Python", "Redshift",
+    "SFTP", "Shell", "Snowflake", "SQL", "Terraform"
+  ],
+  "hobbies": "Bread making, cooking, language learning, nature exploration, woodworking"
+}
