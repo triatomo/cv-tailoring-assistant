@@ -75,7 +75,11 @@ instead of a paid API.
   (a starter set is already included -- edit/extend it with your real bullets).
    Each achievement's `company` + `role` must match an entry in
    `data/profile.json`, which holds the rest of the CV (header, role order and
-   page, education, skills). Rendering the PDF needs Google Chrome (set
+   page, education, skills). Its `relocation` map lists the only countries the
+   CV may claim relocation to, each with a contact-line `note` and location
+   `keywords`: when the JD mentions one of those locations, the contact line
+   ends with that country's note (the first-mentioned country wins if the JD
+   names both), and with the `default_location` text otherwise. Rendering the PDF needs Google Chrome (set
    `CHROME_PATH` if it is not in `/Applications`).
 6. Index your achievements into Qdrant:
   ```

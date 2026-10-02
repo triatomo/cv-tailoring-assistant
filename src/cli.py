@@ -26,7 +26,7 @@ from verify import verify_rewrite, get_final_bullet
 from gaps import assess_gap, MATCH_THRESHOLD
 from embed import EMBEDDING_MODEL
 from ingest import load_achievements
-from cv_profile import Profile, load_profile
+from cv_profile import Profile, load_profile, with_relocation
 from summary import generate_summary
 from render_cv import CVBullet, CVRole, fit_page_one, write_cv
 
@@ -85,7 +85,7 @@ def run_pipeline(jd_text: str, top_k: int = 3) -> PipelineResult:
     print("Classifying JD...", file=sys.stderr)
     classification = classify_jd(jd_text)
 
-    profile = load_profile()
+    profile = with_relocation(load_profile(), jd_text)
     achievements = load_achievements()
 
     # For each achievement, remember the JD requirement it matched best, so it
@@ -170,6 +170,8 @@ def run_pipeline(jd_text: str, top_k: int = 3) -> PipelineResult:
         f"**Detected role category:** {classification.role_category}",
         f"",
         f"**Key terminology to mirror:** {', '.join(classification.key_terminology)}",
+        f"",
+        f"**Contact line:** {' • '.join(profile.contact)}",
         f"",
         f"---",
         f"",

@@ -1,6 +1,17 @@
 {
   "name": "Restria Hertomo",
-  "contact": ["triahertomo.me", "restria.hertomo@gmail.com", "Relocating to Spain or Bangkok"],
+  "contact": ["triahertomo.me", "restria.hertomo@gmail.com"],
+  "relocation": {
+    "Spain": {
+      "note": "EU citizen, based in Germany, relocating to Spain",
+      "keywords": ["Spain", "España", "Espana", "Madrid", "Barcelona", "Valencia", "Sevilla", "Seville", "Málaga", "Malaga", "Bilbao"]
+    },
+    "Thailand": {
+      "note": "Relocating to Thailand",
+      "keywords": ["Thailand", "Bangkok", "Chiang Mai", "Phuket"]
+    }
+  },
+  "default_location": "EU citizen, open for relocating within EU or Asia",
   "default_headline": "Data Engineer - AI Platform",
   "default_summary": "Data Engineer with 5+ years building scalable batch and real-time pipelines, and since 2026, the platform layer for production AI/ML systems — **LLM-powered agent tooling** using **pydantic-AI** and **OpenAI SDK**, **ML pipeline** reliability, and **AI** workflow observability. Strong in **SQL** and **ETL/ELT** on **AWS (Glue, EC2, Lambda, Redshift, SageMaker)**, **Airflow**, **Flink**, **Spark**, **Iceberg**, and **Kafka**, with a DevOps-oriented approach to **CI/CD**, **IaC**, and testing (**pytest**). Translates business and regulatory requirements into consistent, reusable data transformations — partnering closely with financial analysts and legal teams to keep metrics accurate across markets. Autonomous and curious, comfortable solving ambiguous problems with minimal supervision in fast-moving environments.",
   "experience": [
@@ -49,7 +60,7 @@
       "degree": "Master of Science (M.Sc.) in Industrial Engineering",
       "school": "Technische Universität Berlin",
       "date_range": "01/2015 - 12/2017",
-      "thesis": "Improving Delivery Time with Machine Learning: A Case Study in E-Commerce"
+      "thesis": "Improving Delivery Time with Predictive Analytics: A Case Study in E-Commerce"
     },
     {
       "degree": "Bachelor of Science (B.Sc.) in Industrial Engineering",
