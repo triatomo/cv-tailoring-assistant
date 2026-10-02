@@ -33,9 +33,20 @@ cross-encoder reranking, and a Corrective-RAG-style self-check loop applied to
   outputs an honest gap statement (with the closest adjacent experience, if any)
    instead of forcing a weak bullet to fit.
 8. **Summary** (`src/summary.py`) -- writes a per-JD headline and profile
-  summary grounded in your achievements, skills, and default summary. A
-   second LLM call checks it for overclaiming; if anything is flagged, the
-   default summary from `data/profile.json` is used instead.
+  summary. The first and last sentences are fixed (`summary_opening` and
+   `summary_closing` in `data/profile.json`), so the years-of-experience
+   framing never drifts; the LLM writes only the headline and 2-3 middle
+   sentences, built from the achievements that matched the JD's requirements.
+   Deterministic checks reject seniority inflation ("expert", "proven",
+   "leading", ...), years claims, first-person wording, and skill dumps.
+   The headline is the JD's own title adjusted to you: seniority levels
+   (Senior, Lead, Principal, Staff) are always removed, it is at most 6
+   words, and it keeps the JD's role ("Senior AI Engineer - Growth" ->
+   "AI Engineer - Growth"). Each middle sentence must also
+   closely restate a single achievement, keeping its numbers and ownership
+   qualifiers ("Co-designed" stays "Co-designed"). After 3 failed attempts,
+   the default summary from `data/profile.json` is used instead (the headline
+   still follows the JD title when possible).
 9. **Render** (`src/render_cv.py`, `src/templates/cv.html.j2`) -- lays out the
   CV as HTML and prints it to PDF with headless Chrome. Page 1: summary plus the
    roles marked `"page": 1` in `data/profile.json` (AI Engineer, Data Engineer),

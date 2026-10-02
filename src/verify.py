@@ -69,8 +69,16 @@ def verify_rewrite(rewrite_result: RewriteResult) -> VerificationResult:
     if start != -1 and end != -1:
         raw_text = raw_text[start : end + 1]
 
-    data = json.loads(raw_text)
-    return VerificationResult(**data)
+    try:
+        return VerificationResult(**json.loads(raw_text))
+    except (ValueError, TypeError):
+        # Small local models sometimes emit broken JSON. An unverifiable rewrite
+        # is treated as unsupported, so the original bullet is kept.
+        return VerificationResult(
+            is_supported=False,
+            issues=["Could not parse the fact-check response"],
+            recommendation="revert_to_original",
+        )
 
 
 def get_final_bullet(rewrite_result: RewriteResult, verification: VerificationResult) -> str:

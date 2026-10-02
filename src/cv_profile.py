@@ -41,6 +41,10 @@ class Profile(BaseModel):
     default_location: Optional[str] = None  # used when the JD names none of the relocation countries
     default_headline: str
     default_summary: str
+    # Fixed first/last sentences of every tailored summary; the LLM only writes
+    # what goes between them, so the seniority framing never drifts.
+    summary_opening: str
+    summary_closing: str = ""
     experience: List[ExperienceEntry]
     education: List[EducationEntry]
     skills: List[str]

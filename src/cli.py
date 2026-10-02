@@ -159,7 +159,12 @@ def run_pipeline(jd_text: str, top_k: int = 3) -> PipelineResult:
         )
 
     print("Writing summary...", file=sys.stderr)
-    cv_summary = generate_summary(classification, profile, achievements)
+    cv_summary = generate_summary(
+        classification,
+        profile,
+        achievements,
+        matched_requirements={achievement_id: req for achievement_id, (_, req) in best_match.items()},
+    )
 
     print("Fitting page 1...", file=sys.stderr)
     dropped, fits = fit_page_one(profile, cv_summary.headline, cv_summary.summary, roles)

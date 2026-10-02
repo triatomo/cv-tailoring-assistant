@@ -21,6 +21,7 @@ ROLE_CATEGORIES = [
 
 
 class JDClassification(BaseModel):
+    job_title: str = ""  # exactly as the JD writes it
     role_category: str
     key_terminology: List[str]
     key_requirements: List[str]
@@ -33,9 +34,10 @@ Job description:
 {jd_text}
 ---
 
-Do two things:
-1. Classify this JD into exactly one of these role categories: {categories}
-2. Extract two lists:
+Do three things:
+1. Copy the job title exactly as the JD writes it (e.g. "Senior AI Engineer - Growth").
+2. Classify this JD into exactly one of these role categories: {categories}
+3. Extract two lists:
    - key_terminology: the specific vocabulary/terms this JD uses that a candidate
      should mirror in their CV (e.g., "semantic layer", "grain", "drift detection",
      "governed metrics"). Focus on distinctive, role-specific terms, not generic
@@ -45,6 +47,7 @@ Do two things:
 
 Respond with ONLY a JSON object, no other text, matching this exact shape:
 {{
+  "job_title": "<job title as written in the JD>",
   "role_category": "<one of {categories}>",
   "key_terminology": ["...", "..."],
   "key_requirements": ["...", "..."]
