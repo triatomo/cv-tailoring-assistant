@@ -65,7 +65,7 @@
     "company": "Klarna Bank AB",
     "role": "Data Engineer",
     "date_range": "12/2021 - 01/2026",
-    "text": "Designed and maintained production-grade ETL pipelines in Python and SQL Redshift, orchestrated with Airflow and validated through pytest-based unit and integration tests, delivering trusted, analytics-ready datasets for regulatory reporting and cross-market business expansion while adhering to GDPR regulations, supporting Klarna’s market launches and banking license requirements.",
+    "text": "Built and maintained production-grade ETL pipelines in Python and SQL Redshift, orchestrated with Airflow and validated through pytest-based unit and integration tests, delivering trusted, analytics-ready datasets for regulatory reporting and cross-market business expansion while adhering to GDPR regulations, supporting Klarna’s market launches and banking license requirements.",
     "tags": ["etl", "pipeline", "sql", "redshift", "airflow", "testing", "regulatory"],
     "highlights": ["supporting Klarna’s market launches and banking license requirements"]
   },
@@ -92,7 +92,7 @@
     "company": "Klarna Bank AB",
     "role": "Data Engineer",
     "date_range": "12/2021 - 01/2026",
-    "text": "Designed and built a Flask REST API to automate secure file transfers between processing and submission services, deployed as a Dockerized solution on EC2 to meet a client's stringent financial regulatory requirements, reducing operational workload by 6 hours per week and eliminating manual errors through improved automation and logging.",
+    "text": "Delivered a Flask REST API to automate secure file transfers between processing and submission services, deployed as a Dockerized solution on EC2 to meet a client's stringent financial regulatory requirements, reducing operational workload by 6 hours per week and eliminating manual errors through improved automation and logging.",
     "tags": ["api", "flask", "docker", "ec2", "automation"],
     "highlights": ["reducing operational workload by 6 hours per week and eliminating manual errors"]
   },
@@ -110,7 +110,7 @@
     "company": "Klarna Bank AB",
     "role": "Data Engineer",
     "date_range": "12/2021 - 01/2026",
-    "text": "Translated ambiguous client requirements into concrete project scope within Klarna's data model, leading collaboration between external clients and internal stakeholders (legal, underwriting, and others), and acted as the go-to domain expert on a dedicated Slack channel, clarifying metric definitions and business logic so stakeholders across the business could trust the data they relied on.",
+    "text": "Translated ambiguous client requirements into concrete project scope, leading collaboration between external clients and internal stakeholders, and acted as the go-to domain expert clarifying metric definitions and business logic so stakeholders could trust the data they relied on.",
     "tags": ["stakeholder", "governance", "domain-expertise", "communication", "client requirements", "translate"],
     "highlights": ["stakeholders could trust the data they relied on"]
   },
@@ -127,7 +127,7 @@
     "company": "Klarna Bank AB",
     "role": "Data Engineer",
     "date_range": "12/2021 - 01/2026",
-    "text": "Co-designed a governed, canonical data model turning a dozen scattered raw event streams (orders, balances, payment obligations) into one consistent, queryable representation for downstream services, with the loan grain as a key modeled entity, and modeled schemas and data semantics in AWS Glue Data Catalog to standardize reporting logic and ensure consistent metric definitions across markets.",
+    "text": "Implemented a governed, canonical data model unifying a dozen raw event streams (orders, balances, payment obligations) into one queryable representation with the loan grain as a key entity, and modeled schemas in AWS Glue Data Catalog to ensure consistent metric definitions across markets.",
     "tags": ["data-modeling", "canonical-model", "grain", "schema-design", "schema", "glue", "governance", "semantic-consistency"],
     "highlights": ["governed, canonical data model", "consistent metric definitions across markets"]
   },

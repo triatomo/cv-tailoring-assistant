@@ -6,9 +6,9 @@ The summary's opening sentence (who the candidate is, years of experience) and
 closing sentence (working style) are fixed text from data/profile.json, so the
 seniority framing can never drift. The LLM only writes the headline and the
 2-3 middle sentences that tailor the summary to the JD. Those go through
-deterministic checks (no inflated seniority wording, real job title, each
-sentence restating one achievement); if every attempt fails, fall back to the
-default summary.
+deterministic checks (no inflated seniority wording, no copied bullet wording
+or metrics, every named tool and ownership claim backed by the achievements);
+if every attempt fails, fall back to the default summary.
 """
 import re
 from datetime import date
@@ -41,33 +41,27 @@ Write two things:
 
 HEADLINE: {headline_instruction}
 
-MIDDLE: 2-3 sentences (40-70 words), each covering a DIFFERENT job requirement above,
-showing what the candidate built that meets it (data engineering work counts too).
-Name the systems and what they did, using the job's wording where the achievement
-supports it. Wrap 3-6 key tools or terms in **double asterisks**.
-- CV style: no "I", "my", or "As an AI Engineer"; start sentences with a verb in past
-  tense, e.g. "Built ...", "Designed ...".
+MIDDLE: 2-3 sentences (40-70 words), each covering a DIFFERENT job requirement above.
+Summarize the THEME of the matching achievements (the kind of work, domains, and who it
+served) in broader words -- the bullets appear right below the summary, so never copy
+their wording, never reuse their metrics or numbers. Use the job's wording where the
+achievements support it. Wrap 3-6 key tools or terms in **double asterisks**.
+- CV style: no "I", "my", or "As an AI Engineer"; start sentences with a past-tense verb.
 - Do not mention years of experience.
 - Do not use: expert, expertise, proven, seasoned, extensive, deep, leading, senior,
   specialist, results-driven, proficient, successfully.
 - Do not list skills.
-- Do not add tools, numbers, or technologies that are not in the achievements above.
-- Keep each achievement's ownership exactly: "Co-designed" stays "Co-designed",
-  "Contributed to" stays "Contributed to", one platform stays one platform.
+- Do not add tools or technologies that are not in the achievements above.
+- Never claim more ownership than the achievements: if they say "Co-designed" or
+  "Contributed to", do not write "Designed", "Led", or "Owned".
 
 Reply in exactly this format, with no other text:
 HEADLINE: <headline>
 MIDDLE: <sentences>
 """
 
-HEADLINE_FROM_JD = """the job's own title, adjusted to fit the candidate. The job title is
-"{job_title}"; with seniority removed it is "{clean_title}". Keep the headline close to
-that. If it is long, shorten it to the core role and focus (at most 6 words). Never
-include Senior, Lead, Principal, or Staff -- the candidate is not senior. If part of the
-title isn't backed by the candidate's experience, adjust that part so it is.
-Examples: "Senior AI Engineer - Growth" -> "AI Engineer - Growth";
-"Staff Software Engineer, Machine Learning Infrastructure & Developer Platform" ->
-"ML Infrastructure Engineer"."""
+HEADLINE_FROM_JD = """exactly "{clean_title}" -- the job's role title with seniority, company,
+and any focus suffix removed. Write it as given."""
 
 HEADLINE_WITHOUT_JD_TITLE = """one of the candidate's job titles exactly as written
 above, then " - ", then the focus of this job in 2-5 words. Example:
@@ -150,6 +144,12 @@ def _role_part(title: str) -> str:
     return re.split(r"\s+[-–|]\s+|,", title)[0]
 
 
+def jd_headline(job_title: str) -> str:
+    """The CV headline for a JD with a title: just the role, e.g.
+    "Lead Analytics Engineer (F/M/X)" -> "Analytics Engineer", "Senior AI Engineer - Growth" -> "AI Engineer"."""
+    return _role_part(clean_job_title(job_title))
+
+
 def _check_headline(headline: str, job_title: str, profile: Profile) -> List[str]:
     """The headline should be the JD title made to fit: short, not senior, recognisably the same role."""
     issues = []
@@ -188,47 +188,65 @@ def _check_honesty(headline: str, middle: str, profile: Profile) -> List[str]:
     return issues
 
 
-# A generated sentence must restate one achievement: at least this share of its
-# content words has to come from that single achievement.
-GROUNDING_THRESHOLD = 0.7
-STOPWORDS = {
-    "a", "an", "and", "the", "of", "to", "in", "on", "for", "with", "by", "via", "as", "at",
-    "from", "into", "that", "this", "their", "its", "across", "through", "while", "using",
-}
-# Words that limit ownership; if the achievement has one, the sentence must keep it.
-OWNERSHIP_QUALIFIERS = ["co-", "contributed", "supported", "helped", "collaborated", "assisted"]
+# The summary sits right above the bullets, so it must not repeat them: no run of
+# this many consecutive words from any one achievement, and no metrics.
+MAX_COPIED_WORDS = 5
+# Ownership words the summary may only use if the candidate's achievements do.
+OWNERSHIP_WORDS = ["led", "lead", "owned", "own", "owns", "managed", "headed", "directed", "drove", "architected"]
 
 
-def _content_words(text: str) -> set:
-    words = re.findall(r"[a-z0-9][a-z0-9+#.-]*", text.lower())
-    return {w.strip(".") for w in words if w not in STOPWORDS and len(w) > 1}
+def _words(text: str) -> List[str]:
+    return re.findall(r"[a-z0-9][a-z0-9+#/-]*", text.lower())
 
 
-def _check_grounding(middle: str, achievements: List[Achievement]) -> List[str]:
-    """Each sentence must closely restate one achievement, keeping its numbers and qualifiers."""
+def _longest_shared_run(sentence: str, text: str) -> int:
+    """Length of the longest run of consecutive words the sentence shares with text."""
+    a, b = _words(sentence), _words(text)
+    best = 0
+    prev = [0] * (len(b) + 1)
+    for i in range(1, len(a) + 1):
+        cur = [0] * (len(b) + 1)
+        for j in range(1, len(b) + 1):
+            if a[i - 1] == b[j - 1]:
+                cur[j] = prev[j - 1] + 1
+                best = max(best, cur[j])
+        prev = cur
+    return best
+
+
+def _check_grounding(middle: str, source: str, achievements: List[Achievement]) -> List[str]:
+    """The middle must summarize, not copy: no bullet wording or metrics, and every
+    named tool/term and ownership claim must exist in the candidate's material."""
     issues = []
     plain_middle = re.sub(r"\*\*", "", middle)
+    achievements_text = " ".join(a.text for a in achievements)
+    ach_words = set(_words(achievements_text))
     for sentence in re.split(r"(?<=[.!?])\s+", plain_middle.strip()):
-        words = _content_words(sentence)
-        if not words:
+        if not sentence:
             continue
-        best = max(achievements, key=lambda a: len(words & _content_words(a.text)))
-        overlap = len(words & _content_words(best.text)) / len(words)
-        if overlap < GROUNDING_THRESHOLD:
-            issues.append(f"Sentence does not closely restate any one achievement: '{sentence}'")
-            continue
-        # The opening verbs carry the ownership claim ("Designed and built" vs "built"),
-        # so they must come from the achievement itself.
-        verbs = re.match(r"\s*([\w-]+)(?:\s+and\s+([\w-]+))?", sentence)
-        for verb in filter(None, verbs.groups() if verbs else []):
-            if not re.search(rf"\b{re.escape(verb)}\b", best.text, re.IGNORECASE):
-                issues.append(f"Verb '{verb}' is not in the achievement it restates: '{best.text[:60]}...'")
-        for number in re.findall(r"\d[\d.,]*", sentence):
-            if number.rstrip(".,") not in best.text:
-                issues.append(f"Number '{number}' is not in the achievement it restates: '{sentence}'")
-        for qualifier in OWNERSHIP_QUALIFIERS:
-            if qualifier in best.text.lower() and qualifier not in sentence.lower():
-                issues.append(f"Dropped the ownership qualifier '{qualifier}' from: '{best.text[:60]}...'")
+        copied = max(achievements, key=lambda a: _longest_shared_run(sentence, a.text))
+        if _longest_shared_run(sentence, copied.text) > MAX_COPIED_WORDS:
+            issues.append(
+                f"Copies the wording of {copied.id} -- the recruiter reads that bullet right below; "
+                f"summarize the theme in different words: '{sentence}'"
+            )
+        if re.search(r"\d", sentence):
+            issues.append(f"Contains a number; leave metrics to the bullets: '{sentence}'")
+        # "platforms" when every achievement says "platform" inflates scope.
+        for word in set(_words(sentence)):
+            if len(word) > 4 and word.endswith("s") and word[:-1] in ach_words and word not in ach_words:
+                issues.append(f"'{word}' is plural, but the achievements only mention one {word[:-1]}")
+        for word in OWNERSHIP_WORDS:
+            if re.search(rf"\b{word}\b", sentence, re.IGNORECASE) and not re.search(rf"\b{word}\b", achievements_text, re.IGNORECASE):
+                issues.append(f"Ownership word '{word}' is not backed by any achievement")
+    # Named things (bold terms, capitalized names mid-sentence) must come from the material.
+    terms = set(re.findall(r"\*\*(.+?)\*\*", middle))
+    terms |= set(re.findall(r"(?<=[a-z,] )([A-Z][\w./+-]*(?: [A-Z][\w./+-]*)*)", plain_middle))
+    # Achievement tags count as material too ("data-modeling" backs "data modeling").
+    known = (source + " " + " ".join(t.replace("-", " ") for a in achievements for t in a.tags)).lower()
+    for term in sorted({t.strip(".,;:") for t in terms}):
+        if term.lower() not in known:
+            issues.append(f"'{term}' is not in the candidate's material")
     return issues
 
 
@@ -255,7 +273,7 @@ def _check_middle(
     if echoed_terms:
         return [f"JD term not supported by your material: '{t}'" for t in echoed_terms]
 
-    return _check_grounding(middle, achievements)
+    return _check_grounding(middle, source, achievements)
 
 
 def generate_summary(
@@ -282,7 +300,7 @@ def generate_summary(
     ai_start, ai_months = ai_tenure(profile)
     job_title = classification.job_title.strip()
     if job_title:
-        headline_instruction = HEADLINE_FROM_JD.format(job_title=job_title, clean_title=clean_job_title(job_title))
+        headline_instruction = HEADLINE_FROM_JD.format(clean_title=jd_headline(job_title))
     else:
         headline_instruction = HEADLINE_WITHOUT_JD_TITLE
     prompt = SUMMARY_PROMPT.format(
@@ -307,8 +325,9 @@ def generate_summary(
             )
         try:
             headline, middle = _parse_response(call_llm(attempt_prompt, max_tokens=512))
-            headline = clean_job_title(headline)  # strip any seniority the model kept anyway
-            headline_issues = _check_headline(headline, job_title, profile)
+            # With a JD title the headline is fixed to its role; the model only picks one without.
+            headline = jd_headline(job_title) if job_title else clean_job_title(headline)
+            headline_issues = [] if job_title else _check_headline(headline, job_title, profile)
             if not headline_issues:
                 good_headline = headline
             issues = headline_issues + _check_middle(headline, middle, source, profile, classification, achievements)
@@ -319,9 +338,12 @@ def generate_summary(
             summary = " ".join(p for p in [profile.summary_opening, middle, profile.summary_closing] if p)
             return CVSummary(headline=headline, summary=summary, is_generated=True)
 
-    fallback_headline = good_headline
-    if fallback_headline is None and job_title and not _check_headline(clean_job_title(job_title), job_title, profile):
-        fallback_headline = clean_job_title(job_title)
+    return fallback_summary(profile, job_title, good_headline, issues)
+
+
+def fallback_summary(profile: Profile, job_title: str, good_headline: Optional[str], issues: List[str]) -> CVSummary:
+    """The profile's default summary, under the best headline available."""
+    fallback_headline = jd_headline(job_title) if job_title else good_headline
     return CVSummary(
         headline=fallback_headline or profile.default_headline,
         summary=profile.default_summary,

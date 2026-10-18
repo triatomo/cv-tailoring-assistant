@@ -4,6 +4,7 @@ an atomic unit (one bullet = one chunk), so no text-splitting is needed here
 -- this module is about loading + validating structure, not chunking logic.
 """
 import json
+import sys
 from pathlib import Path
 from typing import List
 from pydantic import BaseModel
@@ -19,6 +20,9 @@ class Achievement(BaseModel):
     highlights: List[str] = []  # phrases rendered in bold on the CV, kept verbatim by rewrites
 
 
+_warned = set()  # (id, phrase) pairs already reported; achievements are reloaded per requirement
+
+
 def load_achievements(path: str = "data/achievements/achievements.json") -> List[Achievement]:
     """Load and validate achievements from a JSON file."""
     file_path = Path(path)
@@ -30,6 +34,12 @@ def load_achievements(path: str = "data/achievements/achievements.json") -> List
         raw = json.loads("".join(line for line in f if not line.lstrip().startswith("//")))
 
     achievements = [Achievement(**item) for item in raw]
+    # The CV bolds a highlight only where it appears verbatim, so a stale one fails silently.
+    for a in achievements:
+        for phrase in a.highlights:
+            if phrase.lower() not in a.text.lower() and (a.id, phrase) not in _warned:
+                _warned.add((a.id, phrase))
+                print(f"Warning: highlight not found in {a.id}'s text, it won't be bold: '{phrase}'", file=sys.stderr)
     return achievements
 
 

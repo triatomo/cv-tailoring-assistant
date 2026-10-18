@@ -17,7 +17,9 @@ cross-encoder reranking, and a Corrective-RAG-style self-check loop applied to
   upserts into Qdrant.
 3. **Classify** (`src/classify_jd.py`) -- an LLM call classifies the JD into a
   role category (AI/ML Engineer, Data Engineer, AI Data Engineer, BI/Analytics, etc.) and
-   extracts its key terminology and requirements.
+   extracts its key terminology and requirements. A clear JD title overrides the
+   LLM's category ("Analytics Engineer" -> BI/Analytics), and the AI categories
+   are only used when the title itself contains an AI/ML term.
 4. **Retrieve** (`src/retrieve.py`) -- for each JD requirement, runs hybrid
   search (BM25 + vector, merged via reciprocal rank fusion), boosts results
    whose tags match the classified role category, then reranks with a
@@ -32,19 +34,27 @@ cross-encoder reranking, and a Corrective-RAG-style self-check loop applied to
 7. **Gaps** (`src/gaps.py`) -- for requirements with no strong retrieval match,
   outputs an honest gap statement (with the closest adjacent experience, if any)
    instead of forcing a weak bullet to fit.
-8. **Summary** (`src/summary.py`) -- writes a per-JD headline and profile
+8. **Summary** (`src/summary_agent.py`, `src/summary.py`) -- a tool-calling agent
+  (Ollama, `SUMMARY_AGENT_MODEL`, default `gemma4:31b-cloud`) reads the full JD,
+  decides what it cares about most, looks up matching achievements with a
+  `search_achievements` tool, and revises its draft until a `check_draft` tool
+  (the deterministic checks below) passes; only a passing draft is used. With
+  `LLM_BACKEND=anthropic` the one-shot `src/summary.py` generator runs instead.
+  Either way it writes a per-JD headline and profile
   summary. The first and last sentences are fixed (`summary_opening` and
    `summary_closing` in `data/profile.json`), so the years-of-experience
    framing never drifts; the LLM writes only the headline and 2-3 middle
    sentences, built from the achievements that matched the JD's requirements.
    Deterministic checks reject seniority inflation ("expert", "proven",
    "leading", ...), years claims, first-person wording, and skill dumps.
-   The headline is the JD's own title adjusted to you: seniority levels
-   (Senior, Lead, Principal, Staff) are always removed, it is at most 6
-   words, and it keeps the JD's role ("Senior AI Engineer - Growth" ->
-   "AI Engineer - Growth"). Each middle sentence must also
-   closely restate a single achievement, keeping its numbers and ownership
-   qualifiers ("Co-designed" stays "Co-designed"). After 3 failed attempts,
+   The headline is the JD's role title only, set in code rather than by the
+   LLM: seniority (Senior, Lead, Principal, Staff), parentheticals, and any
+   suffix after " - " or "," are removed ("Lead Analytics Engineer (F/M/X)" ->
+   "Analytics Engineer", "Senior AI Engineer - Growth" -> "AI Engineer"), so
+   it never carries a company or team name. The middle sentences summarize
+   themes across achievements rather than repeating them: a check rejects any
+   run of more than 5 words copied from a bullet and any metric, while every
+   named tool and ownership word ("led", "owned") must appear in the achievements. After 3 failed attempts,
    the default summary from `data/profile.json` is used instead (the headline
    still follows the JD title when possible).
 9. **Render** (`src/render_cv.py`, `src/templates/cv.html.j2`) -- lays out the

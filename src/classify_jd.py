@@ -5,6 +5,7 @@ using the LLM. This output is used downstream to bias retrieval (e.g., up-weight
 AI Engineer JD) and to drive the grounded-rewrite terminology substitution.
 """
 import json
+import re
 from typing import List
 from pydantic import BaseModel
 
@@ -82,7 +83,32 @@ def classify_jd(jd_text: str) -> JDClassification:
         raw_text = raw_text[start : end + 1]
 
     data = json.loads(raw_text)
-    return JDClassification(**data)
+    classification = JDClassification(**data)
+    classification.role_category = category_from_title(classification.job_title, classification.role_category)
+    return classification
+
+
+AI_TITLE = re.compile(r"\b(AI|ML|LLM|GenAI|Machine Learning|Artificial Intelligence)\b", re.IGNORECASE)
+# Checked in order; the first matching title pattern decides the category.
+TITLE_CATEGORIES = [
+    (re.compile(r"\banalytics\b|\bBI\b|business intelligence", re.IGNORECASE), "BI/Analytics"),
+    (re.compile(r"\bdata scien", re.IGNORECASE), "Data Scientist"),
+    (re.compile(r"\bdata engineer", re.IGNORECASE), "Data Engineer"),
+    (re.compile(r"\bplatform\b|\binfrastructure\b|\bdevops\b|\bSRE\b", re.IGNORECASE), "Platform/Infra"),
+]
+
+
+def category_from_title(job_title: str, llm_category: str) -> str:
+    """The JD title outranks the LLM's guess when it is clear: "Analytics Engineer" is
+    BI/Analytics, never an AI category. AI categories need an AI term in the title."""
+    if AI_TITLE.search(job_title):
+        return "AI Data Engineer" if re.search(r"\bdata\b", job_title, re.IGNORECASE) else "AI/ML Engineer"
+    for pattern, category in TITLE_CATEGORIES:
+        if pattern.search(job_title):
+            return category
+    if llm_category in ("AI Data Engineer", "AI/ML Engineer"):
+        return "Other"  # no AI in the title: don't let the LLM call it an AI role
+    return llm_category
 
 
 if __name__ == "__main__":

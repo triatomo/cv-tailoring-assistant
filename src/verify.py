@@ -6,6 +6,7 @@ than Q&A -- it's the guardrail against overclaiming (new tools, inflated scope,
 inflated seniority) that got caught manually multiple times during CV tailoring.
 """
 import json
+import re
 from typing import List
 from pydantic import BaseModel
 
@@ -21,7 +22,14 @@ Original bullet:
 Rewritten bullet:
 "{rewritten_text}"
 
+Words the rewrite removed: {removed}
+Words the rewrite added: {added}
+
 Check specifically for:
+- Replaced concepts: each added word or phrase must mean the SAME thing as what it
+  replaced, not merely sound like the job description. Flag a swap that changes what
+  was done, e.g. "observability" -> "operational KPIs", "model integration" ->
+  "modeling layer integration", "datasets" -> "data lake".
 - New tools, frameworks, or technologies not mentioned in the original
 - Inflated scope (e.g., "the whole platform" when original said "a component")
 - Inflated seniority/ownership (e.g., "led" when original said "contributed to"
@@ -47,15 +55,28 @@ class VerificationResult(BaseModel):
     recommendation: str
 
 
+def _word_diff(original: str, rewritten: str):
+    """Words only in the original / only in the rewrite, in order of appearance.
+    Spelling them out makes the checker judge each swap instead of skimming."""
+    words = lambda t: re.findall(r"[\w'+#./-]+", t.lower())
+    orig, new = words(original), words(rewritten)
+    removed = list(dict.fromkeys(w for w in orig if w not in set(new)))
+    added = list(dict.fromkeys(w for w in new if w not in set(orig)))
+    return removed, added
+
+
 def verify_rewrite(rewrite_result: RewriteResult) -> VerificationResult:
     # If the rewrite is byte-identical to the original, skip the LLM call --
     # nothing to verify, it's trivially supported.
     if rewrite_result.rewritten_text.strip() == rewrite_result.original_text.strip():
         return VerificationResult(is_supported=True, issues=[], recommendation="use_rewrite")
 
+    removed, added = _word_diff(rewrite_result.original_text, rewrite_result.rewritten_text)
     prompt = VERIFY_PROMPT.format(
         original_text=rewrite_result.original_text,
         rewritten_text=rewrite_result.rewritten_text,
+        removed=", ".join(removed) or "(none)",
+        added=", ".join(added) or "(none)",
     )
 
     raw_text = call_llm(prompt, max_tokens=512).strip()

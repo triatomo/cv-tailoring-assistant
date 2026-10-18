@@ -27,7 +27,7 @@ from gaps import assess_gap, MATCH_THRESHOLD
 from embed import EMBEDDING_MODEL
 from ingest import load_achievements
 from cv_profile import Profile, load_profile, skill_sets_for, with_relocation, with_skills
-from summary import generate_summary
+from summary_agent import generate_summary_with_agent
 from render_cv import CVBullet, CVRole, fit_page_one, write_cv
 
 load_dotenv()
@@ -86,7 +86,11 @@ def run_pipeline(jd_text: str, top_k: int = 3) -> PipelineResult:
     classification = classify_jd(jd_text)
 
     profile = with_skills(with_relocation(load_profile(), jd_text), classification.role_category)
-    achievements = load_achievements()
+    # Only achievements of roles the profile lists go on the CV; the rest stay in
+    # the bank (e.g. removed working-student roles) but are never retrieved or used.
+    cv_roles = {(e.company, e.role) for e in profile.experience}
+    achievements = [a for a in load_achievements() if (a.company, a.role) in cv_roles]
+    cv_ids = {a.id for a in achievements}
 
     # For each achievement, remember the JD requirement it matched best, so it
     # can be ranked for page 1 and rewritten toward that requirement.
@@ -96,6 +100,7 @@ def run_pipeline(jd_text: str, top_k: int = 3) -> PipelineResult:
     for requirement in classification.key_requirements:
         print(f"Job requirement: {requirement}", file=sys.stderr)
         retrieved = retrieve_for_requirement(requirement, classification, embedding_model, top_k=top_k)
+        retrieved = [r for r in retrieved if r.achievement.id in cv_ids]
 
         gap = assess_gap(requirement, retrieved)
         if not gap.has_strong_match:
@@ -168,11 +173,13 @@ def run_pipeline(jd_text: str, top_k: int = 3) -> PipelineResult:
             )
         )
 
-    print("Writing summary...", file=sys.stderr)
-    cv_summary = generate_summary(
+    print("Writing summary (agent)...", file=sys.stderr)
+    cv_summary = generate_summary_with_agent(
+        jd_text,
         classification,
         profile,
         achievements,
+        embedding_model,
         matched_requirements={achievement_id: req for achievement_id, (_, req) in best_match.items()},
     )
 

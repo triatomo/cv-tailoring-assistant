@@ -13,7 +13,14 @@ Ollama setup (one-time, free):
     No API key, no per-token cost -- just local compute.
 """
 import os
+from typing import Any, Dict, List
+
 import requests
+from dotenv import load_dotenv
+
+# Load .env here, before the settings below are read: modules import this one
+# before cli.py's own load_dotenv() runs.
+load_dotenv()
 
 LLM_BACKEND = os.getenv("LLM_BACKEND", "ollama")  # "ollama" or "anthropic"
 OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "llama3.1:8b")
@@ -42,6 +49,18 @@ def _call_ollama(prompt: str, max_tokens: int) -> str:
     )
     response.raise_for_status()
     return response.json()["response"].strip()
+
+
+def chat_ollama(messages: List[Dict[str, Any]], tools: List[Dict[str, Any]], model: str) -> Dict[str, Any]:
+    """One tool-calling chat turn against Ollama; returns the assistant message
+    (with "tool_calls" when the model wants to call a tool)."""
+    response = requests.post(
+        f"{OLLAMA_HOST}/api/chat",
+        json={"model": model, "messages": messages, "tools": tools, "stream": False},
+        timeout=OLLAMA_TIMEOUT,
+    )
+    response.raise_for_status()
+    return response.json()["message"]
 
 
 def _call_anthropic(prompt: str, max_tokens: int) -> str:
