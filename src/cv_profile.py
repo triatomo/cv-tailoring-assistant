@@ -37,6 +37,11 @@ class PersonalProject(BaseModel):
     description: str
 
 
+class SkillSet(BaseModel):
+    categories: List[str]  # JD role categories (see classify_jd.ROLE_CATEGORIES) this set is used for
+    skills: List[str]
+
+
 class RelocationTarget(BaseModel):
     note: str  # contact-line text used when the JD is in this country
     keywords: List[str]  # country/city names that place the JD in this country
@@ -58,7 +63,10 @@ class Profile(BaseModel):
     experience: List[ExperienceEntry]
     education: List[EducationEntry]
     personal_projects: List[PersonalProject] = []  # page 2, after work experience; not retrieved or rewritten
-    skills: List[str]
+    # Skill set name -> skills + the JD role categories it is used for.
+    skill_sets: Dict[str, SkillSet]
+    default_skill_set: str  # used when no set lists the JD's role category
+    skills: List[str] = []  # the set chosen for this JD; filled by with_skills()
     hobbies: Optional[str] = None
 
 
@@ -87,6 +95,22 @@ def with_relocation(profile: Profile, jd_text: str) -> Profile:
     if not note:
         return profile
     return profile.model_copy(update={"contact": profile.contact + [note]})
+
+
+def skill_sets_for(profile: Profile, role_category: str) -> List[str]:
+    """Names of every skill set listing the JD's role category, else just the default set."""
+    names = [name for name, s in profile.skill_sets.items() if role_category in s.categories]
+    return names or [profile.default_skill_set]
+
+
+def with_skills(profile: Profile, role_category: str) -> Profile:
+    """Copy of the profile whose skills are the chosen sets combined (e.g. AI Data Engineer),
+    deduplicated case-insensitively and sorted alphabetically."""
+    merged: Dict[str, str] = {}
+    for name in skill_sets_for(profile, role_category):
+        for skill in profile.skill_sets[name].skills:
+            merged.setdefault(skill.lower(), skill)
+    return profile.model_copy(update={"skills": sorted(merged.values(), key=str.lower)})
 
 
 def load_profile(path: str = "data/profile.json") -> Profile:

@@ -13,6 +13,7 @@ from llm_client import call_llm
 ROLE_CATEGORIES = [
     "AI/ML Engineer",
     "Data Engineer",
+    "AI Data Engineer",
     "BI/Analytics",
     "Platform/Infra",
     "Data Scientist",
@@ -37,6 +38,8 @@ Job description:
 Do three things:
 1. Copy the job title exactly as the JD writes it (e.g. "Senior AI Engineer - Growth").
 2. Classify this JD into exactly one of these role categories: {categories}
+   Use "AI Data Engineer" when the role is both data engineering and AI/LLM/ML
+   engineering (e.g. "AI Data Engineer", data pipelines feeding LLM or ML systems).
 3. Extract two lists:
    - key_terminology: the specific vocabulary/terms this JD uses that a candidate
      should mirror in their CV (e.g., "semantic layer", "grain", "drift detection",

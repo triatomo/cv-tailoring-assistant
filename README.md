@@ -16,7 +16,7 @@ cross-encoder reranking, and a Corrective-RAG-style self-check loop applied to
 2. **Embed** (`src/embed.py`) -- embeds achievements with a local BGE model and
   upserts into Qdrant.
 3. **Classify** (`src/classify_jd.py`) -- an LLM call classifies the JD into a
-  role category (AI/ML Engineer, Data Engineer, BI/Analytics, etc.) and
+  role category (AI/ML Engineer, Data Engineer, AI Data Engineer, BI/Analytics, etc.) and
    extracts its key terminology and requirements.
 4. **Retrieve** (`src/retrieve.py`) -- for each JD requirement, runs hybrid
   search (BM25 + vector, merged via reciprocal rank fusion), boosts results
@@ -93,7 +93,7 @@ instead of a paid API.
    CV may claim relocation to, each with a contact-line `note` and location
    `keywords`: when the JD mentions one of those locations, the contact line
    ends with that country's note (the first-mentioned country wins if the JD
-   names both), and with the `default_location` text otherwise. Rendering the PDF needs Google Chrome (set
+   names both), and with the `default_location` text otherwise. Skills come from `skill_sets`: the CV lists every set whose `categories` include the JD's role category, combined without duplicates (an "AI Data Engineer" JD gets both the Data Engineer and AI Engineer sets), else `default_skill_set`. Rendering the PDF needs Google Chrome (set
    `CHROME_PATH` if it is not in `/Applications`).
 6. Index your achievements into Qdrant:
   ```

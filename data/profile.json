@@ -25,7 +25,7 @@
       "page": 1,
       "min_bullets": 2,
       "max_bullets": 4,
-      "categories": ["AI/ML Engineer", "Data Scientist"]
+      "categories": ["AI/ML Engineer", "AI Data Engineer", "Data Scientist"]
     },
     {
       "company": "Klarna Bank AB",
@@ -35,7 +35,7 @@
       "page": 1,
       "min_bullets": 3,
       "max_bullets": 6,
-      "categories": ["Data Engineer", "BI/Analytics", "Platform/Infra"]
+      "categories": ["Data Engineer", "AI Data Engineer", "BI/Analytics", "Platform/Infra"]
     },
     {
       "company": "Klarna Bank AB",
@@ -73,12 +73,6 @@
       "thesis": "Eine Diskussion über die Kapitalverkehrskontrolle vor dem Hintergrund der Asienkrise"
     }
   ],
-  "skills": [
-    "Apache Airflow", "Apache Flink", "Apache Iceberg", "Apache Spark", "AWS Glue",
-    "Datadog", "Docker", "EC2", "Flask", "GitHub", "GCP", "GraphQL", "Java", "Jenkins",
-    "Kafka", "Lambda", "Looker", "NGINX", "OpenAI SDK", "pydantic-AI", "pytest", "Python", "Redshift",
-    "SFTP", "Snowflake", "SQL", "Terraform"
-  ],
   "personal_projects": [
     {
       "name": "CV Tailoring Assistant",
@@ -93,5 +87,26 @@
       "description": "A near-real-time analytics platform: CDC from Postgres via Debezium, streamed through Kafka, and materialized with Spark Structured Streaming into a dimensional model, served through SQL mart views and a FastAPI layer."
     }
   ],
+  "default_skill_set": "Data Engineer",
+  "skill_sets": {
+    "Data Engineer": {
+      "categories": ["Data Engineer", "AI Data Engineer", "BI/Analytics", "Data Platform/Infra", "Other"],
+      "skills": [
+        "Apache Airflow", "Apache Flink", "Apache Iceberg", "Apache Spark", "Apache Superset", "AWS",
+        "Datadog", "Docker", "FastAPI", "Flask", "GitHub", "GCP", "GraphQL", "Java", "Jenkins",
+        "Kafka", "Looker", "NGINX", "pytest", "Python", "Redshift",
+        "SFTP", "Snowflake", "SQL", "Terraform"
+      ]
+    },
+    "AI Engineer": {
+      "categories": ["AI/ML Engineer", "AI Data Engineer", "Data Scientist", "AI Platform/Infra"],
+      "skills": [
+        "Apache Airflow", "Apache Spark", "Apache Superset", "Datadog", "Docker", "FastAPI", "FastMCP", "GitHub",
+        "Harness engineering", "Kafka", "LLM orchestration", "Machine Learning", "MLOps",
+        "OpenAI SDK", "pydantic-AI", "pytest", "Python", "RAG",
+        "SQL", "Terraform", "Triton Inference Server"
+      ]
+    }
+  },
   "hobbies": "Bread making, cooking, language learning, nature exploration, woodworking"
 }

@@ -24,6 +24,7 @@ RERANKER_MODEL = "BAAI/bge-reranker-base"
 ROLE_TAG_BOOSTS: Dict[str, List[str]] = {
     "AI/ML Engineer": ["llm", "agent", "prompt-engineering", "mlops", "llmops", "production-ai"],
     "Data Engineer": ["etl", "pipeline", "schema", "data-modeling", "airflow", "spark", "kafka", "iceberg"],
+    "AI Data Engineer": ["llm", "mlops", "llmops", "production-ai", "etl", "pipeline", "data-modeling", "airflow", "spark", "kafka"],
     "BI/Analytics": ["stakeholder", "reporting", "dashboards", "translation", "domain-expertise", "looker"],
     "Platform/Infra": ["kubernetes", "ci-cd", "infrastructure", "observability", "monitoring", "docker"],
     "Data Scientist": ["data-science", "experimentation", "modeling", "fraud", "risk"],
