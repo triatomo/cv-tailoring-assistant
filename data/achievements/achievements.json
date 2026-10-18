@@ -110,12 +110,21 @@
     "company": "Klarna Bank AB",
     "role": "Data Engineer",
     "date_range": "12/2021 - 01/2026",
-    "text": "Translated ambiguous client requirements into concrete project scope, leading collaboration between external clients and internal stakeholders, and acted as the go-to domain expert clarifying metric definitions and business logic so stakeholders could trust the data they relied on.",
-    "tags": ["stakeholder", "governance", "domain-expertise", "communication", "client requirements", "translate"],
-    "highlights": ["stakeholders could trust the data they relied on"]
+    "text": "Translated ambiguous client requirements into concrete project scope within Klarna’s data model, leading client meetings and working sessions with internal stakeholders to turn regulatory and client data requests into a buildable, compliant reporting design.",
+    "tags": ["client requirements", "translate", "stakeholder", "communication", "requirements-gathering", "regulatory", "compliance", "reporting", "data-modeling"],
+    "highlights": ["turn regulatory and client data requests into a buildable, compliant reporting design"]
   },
   {
     "id": "ach_13",
+    "company": "Klarna Bank AB",
+    "role": "Data Engineer",
+    "date_range": "12/2021 - 01/2026",
+    "text": "Acted as the go-to domain expert for debt reporting datasets on a dedicated Slack channel, answering questions on metric definitions, data lineage, and business logic so stakeholders could trust the data they relied on.",
+    "tags": ["stakeholder", "governance", "domain-expertise", "communication"],
+    "highlights": ["stakeholders could trust the data they relied on"]
+  },
+  {
+    "id": "ach_14",
     "company": "Klarna Bank AB",
     "role": "Data Engineer",
     "date_range": "12/2021 - 01/2026",
@@ -123,7 +132,7 @@
     "tags": ["ci-cd", "jenkins", "leadership", "infrastructure"]
   },
   {
-    "id": "ach_14",
+    "id": "ach_15",
     "company": "Klarna Bank AB",
     "role": "Data Engineer",
     "date_range": "12/2021 - 01/2026",
@@ -134,7 +143,7 @@
 
   // ===== AI Engineer @ Klarna Bank AB =====
   {
-    "id": "ach_15",
+    "id": "ach_16",
     "company": "Klarna Bank AB",
     "role": "AI Engineer",
     "date_range": "01/2026 - Present",
@@ -143,7 +152,7 @@
     "highlights": ["delivering an estimated $1M in annual financial impact"]
   },
   {
-    "id": "ach_16",
+    "id": "ach_17",
     "company": "Klarna Bank AB",
     "role": "AI Engineer",
     "date_range": "01/2026 - Present",
@@ -152,7 +161,7 @@
     "highlights": ["improve catalog accuracy across Klarna's shopping experience"]
   },
   {
-    "id": "ach_17",
+    "id": "ach_18",
     "company": "Klarna Bank AB",
     "role": "AI Engineer",
     "date_range": "01/2026 - Present",
@@ -161,7 +170,7 @@
     "highlights": ["cut production API response time by ~80% (p50: 33ms -> 6ms)"]
   },
   {
-    "id": "ach_18",
+    "id": "ach_19",
     "company": "Klarna Bank AB",
     "role": "AI Engineer",
     "date_range": "01/2026 - Present",

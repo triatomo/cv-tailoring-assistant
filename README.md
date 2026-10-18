@@ -47,11 +47,11 @@ cross-encoder reranking, and a Corrective-RAG-style self-check loop applied to
    sentences, built from the achievements that matched the JD's requirements.
    Deterministic checks reject seniority inflation ("expert", "proven",
    "leading", ...), years claims, first-person wording, and skill dumps.
-   The headline is the JD's role title only, set in code rather than by the
-   LLM: seniority (Senior, Lead, Principal, Staff), parentheticals, and any
-   suffix after " - " or "," are removed ("Lead Analytics Engineer (F/M/X)" ->
-   "Analytics Engineer", "Senior AI Engineer - Growth" -> "AI Engineer"), so
-   it never carries a company or team name. The middle sentences summarize
+   The headline is the JD's role name, set in code rather than by the
+   LLM: seniority is kept, while parentheticals and any suffix after " - " or
+   "," are removed ("Lead Analytics Engineer (F/M/X)" -> "Lead Analytics
+   Engineer", "Senior AI Engineer - Growth" -> "Senior AI Engineer"), so it
+   never carries a company or team name. The middle sentences summarize
    themes across achievements rather than repeating them: a check rejects any
    run of more than 5 words copied from a bullet and any metric, while every
    named tool and ownership word ("led", "owned") must appear in the achievements. After 3 failed attempts,
@@ -134,12 +134,12 @@ source venv/bin/activate
 Against a JD in a file:
 
 ```
-python src/cli.py --jd local/jd/AIEngineer.pdf --out local/output/AIEngineer.md
+python src/cli.py --jd local/jd/AIEngineer.pdf --out local/output/AIEngineer.pdf
 ```
 
-This writes the CV to `local/output/AIEngineer.pdf` (+ `.html`) and the review
-notes (rewrites, bullets dropped to fit page 1, gaps) to the `.md`. Use
-`--cv path.pdf` to put the CV somewhere else.
+This writes only the CV PDF to `local/output/AIEngineer.pdf` (default:
+`tailored_cv.pdf`) and prints the review notes (rewrites, bullets dropped to fit
+page 1, gaps) to the terminal.
 
 Against pasted JD text:
 
@@ -166,7 +166,7 @@ gap detection correctly distinguish real gaps from real matches.
 
 - No agent harness runtime, sandboxing, or multi-tenancy.
 - No GraphRAG / knowledge graph.
-- No frontend -- CLI output only (PDF/HTML CV + markdown review notes).
+- No frontend -- CLI output only (PDF CV + review notes in the terminal).
 - Output is a **draft for review**, not a finished CV -- always read the gap
 list and spot-check rewrites before using anything in a real application.
 - The role-category tag boost table (`ROLE_TAG_BOOSTS` in `retrieve.py`) is a

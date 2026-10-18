@@ -1,10 +1,10 @@
 """
 Entry point: takes a JD (text file, PDF file, or pasted text), runs the full
 pipeline, and outputs:
-  - a tailored CV as PDF + HTML (per-JD summary, page-1 roles filled with the
+  - a tailored CV as PDF (per-JD summary, page-1 roles filled with the
     most relevant rewritten bullets and fitted to one page, then the remaining
     roles, education, and skills on page 2), and
-  - review notes as markdown (rewrites, anything dropped to fit, honest gaps).
+  - review notes printed to the terminal (rewrites, anything dropped to fit, honest gaps).
 
 Usage:
     python src/cli.py --jd path/to/jd.txt
@@ -240,13 +240,7 @@ def main():
     parser.add_argument("--jd", type=str, help="Path to a JD text file.")
     parser.add_argument("--jd-text", type=str, help="JD text pasted directly.")
     parser.add_argument("--top-k", type=int, default=3, help="Candidates to retrieve per requirement.")
-    parser.add_argument("--out", type=str, default=None, help="Optional output markdown file path (review notes).")
-    parser.add_argument(
-        "--cv",
-        type=str,
-        default=None,
-        help="Output CV PDF path (an .html is written next to it). Defaults to --out with a .pdf suffix, else tailored_cv.pdf.",
-    )
+    parser.add_argument("--out", type=str, default="tailored_cv.pdf", help="Output CV PDF path (default: tailored_cv.pdf).")
     args = parser.parse_args()
 
     if not args.jd and not args.jd_text:
@@ -256,20 +250,11 @@ def main():
     jd_text = read_jd_text(args)
     result = run_pipeline(jd_text, top_k=args.top_k)
 
-    if args.out:
-        Path(args.out).write_text(result.review_md, encoding="utf-8")
-        print(f"Written to {args.out}", file=sys.stderr)
-    else:
-        print(result.review_md)
+    print(result.review_md)
 
-    if args.cv:
-        cv_path = Path(args.cv)
-    elif args.out:
-        cv_path = Path(args.out).with_suffix(".pdf")
-    else:
-        cv_path = Path("tailored_cv.pdf")
-    html_path = write_cv(result.profile, result.headline, result.summary, result.roles, cv_path)
-    print(f"CV written to {cv_path} (and {html_path})", file=sys.stderr)
+    cv_path = Path(args.out).with_suffix(".pdf")
+    write_cv(result.profile, result.headline, result.summary, result.roles, cv_path)
+    print(f"CV written to {cv_path}", file=sys.stderr)
 
 
 if __name__ == "__main__":

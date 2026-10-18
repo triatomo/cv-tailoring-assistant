@@ -125,9 +125,9 @@ def fit_page_one(profile: Profile, headline: str, summary: str, roles: List[CVRo
     return dropped, True
 
 
-def write_cv(profile: Profile, headline: str, summary: str, roles: List[CVRole], pdf_path: Path) -> Path:
-    """Write <name>.html and <name>.pdf side by side; returns the HTML path."""
-    html_path = pdf_path.with_suffix(".html")
-    html_path.write_text(render_html(profile, headline, summary, roles), encoding="utf-8")
-    html_to_pdf(html_path, pdf_path)
-    return html_path
+def write_cv(profile: Profile, headline: str, summary: str, roles: List[CVRole], pdf_path: Path) -> None:
+    """Write the CV PDF; the HTML it is printed from only lives in a temp directory."""
+    with tempfile.TemporaryDirectory() as tmp:
+        html_path = Path(tmp) / "cv.html"
+        html_path.write_text(render_html(profile, headline, summary, roles), encoding="utf-8")
+        html_to_pdf(html_path, pdf_path.resolve())

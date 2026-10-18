@@ -60,7 +60,7 @@ HEADLINE: <headline>
 MIDDLE: <sentences>
 """
 
-HEADLINE_FROM_JD = """exactly "{clean_title}" -- the job's role title with seniority, company,
+HEADLINE_FROM_JD = """exactly "{clean_title}" -- the job's role title with company, parentheticals,
 and any focus suffix removed. Write it as given."""
 
 HEADLINE_WITHOUT_JD_TITLE = """one of the candidate's job titles exactly as written
@@ -145,9 +145,10 @@ def _role_part(title: str) -> str:
 
 
 def jd_headline(job_title: str) -> str:
-    """The CV headline for a JD with a title: just the role, e.g.
-    "Lead Analytics Engineer (F/M/X)" -> "Analytics Engineer", "Senior AI Engineer - Growth" -> "AI Engineer"."""
-    return _role_part(clean_job_title(job_title))
+    """The CV headline for a JD with a title: the JD's role name, seniority included, e.g.
+    "Lead Analytics Engineer (F/M/X)" -> "Lead Analytics Engineer", "Senior AI Engineer - Growth" -> "Senior AI Engineer"."""
+    title = re.sub(r"\(.*?\)", " ", job_title)
+    return " ".join(_role_part(title).split()).strip(" -–|,/")
 
 
 def _check_headline(headline: str, job_title: str, profile: Profile) -> List[str]:
@@ -173,11 +174,14 @@ def _check_headline(headline: str, job_title: str, profile: Profile) -> List[str
 
 
 def _check_honesty(headline: str, middle: str, profile: Profile) -> List[str]:
-    """Deterministic checks for inflated seniority, first-person wording, and skill dumps."""
+    """Deterministic checks for inflated seniority, first-person wording, and skill dumps.
+
+    Only the middle is checked: a JD headline is the JD's own title ("Senior ..."), and
+    a model-picked headline is already limited to the candidate's own job titles."""
     issues = []
     plain_middle = re.sub(r"\*\*", "", middle)
     for word in INFLATED_WORDS:
-        if re.search(rf"\b{re.escape(word)}\b", f"{headline} {plain_middle}", re.IGNORECASE):
+        if re.search(rf"\b{re.escape(word)}\b", plain_middle, re.IGNORECASE):
             issues.append(f"Inflated seniority wording: '{word}'")
     if re.search(r"\b(I|my|me)\b|\bAs an?\b", plain_middle):
         issues.append("Written in first person; use CV style starting with past-tense verbs")
