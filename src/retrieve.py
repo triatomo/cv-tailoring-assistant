@@ -4,6 +4,7 @@ reciprocal rank fusion, then reranked with a cross-encoder. Retrieval scoring
 is biased using the JD's role classification: achievements whose tags overlap
 with terms relevant to the classified role category get a small score boost.
 """
+from functools import lru_cache
 from typing import List, Dict
 from dataclasses import dataclass
 
@@ -108,17 +109,35 @@ def apply_role_boost(
     return [doc_id for doc_id, _ in scored]
 
 
+@lru_cache(maxsize=1)
+def _cross_encoder() -> CrossEncoder:
+    return CrossEncoder(RERANKER_MODEL)
+
+
 def rerank(query: str, candidate_ids: List[str], achievements_by_id: Dict[str, Achievement], top_k: int = 5) -> List[RetrievedAchievement]:
     """Cross-encoder rerank of candidates against the query."""
-    cross_encoder = CrossEncoder(RERANKER_MODEL)
     pairs = [(query, achievements_by_id[doc_id].text) for doc_id in candidate_ids]
-    scores = cross_encoder.predict(pairs)
+    scores = _cross_encoder().predict(pairs)
 
     ranked = sorted(zip(candidate_ids, scores), key=lambda x: x[1], reverse=True)
     return [
         RetrievedAchievement(achievement=achievements_by_id[doc_id], score=float(score))
         for doc_id, score in ranked[:top_k]
     ]
+
+
+def score_against_jd(requirements: List[str], achievements: List[Achievement]) -> Dict[str, float]:
+    """Best cross-encoder score of each achievement against any JD requirement.
+
+    Unlike retrieve_for_requirement, this scores every achievement given, so
+    bullets that never made a requirement's top-k can still be ranked.
+    """
+    if not requirements or not achievements:
+        return {}
+    pairs = [(req, a.text) for a in achievements for req in requirements]
+    scores = _cross_encoder().predict(pairs)
+    n = len(requirements)
+    return {a.id: float(max(scores[i * n : (i + 1) * n])) for i, a in enumerate(achievements)}
 
 
 def retrieve_for_requirement(

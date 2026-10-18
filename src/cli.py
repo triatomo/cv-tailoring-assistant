@@ -20,7 +20,7 @@ from dotenv import load_dotenv
 from sentence_transformers import SentenceTransformer
 
 from classify_jd import classify_jd
-from retrieve import retrieve_for_requirement
+from retrieve import retrieve_for_requirement, score_against_jd
 from rewrite import rewrite_achievement
 from verify import verify_rewrite, get_final_bullet
 from gaps import assess_gap, MATCH_THRESHOLD
@@ -109,15 +109,25 @@ def run_pipeline(jd_text: str, top_k: int = 3) -> PipelineResult:
             if current is None or candidate.score > current[0]:
                 best_match[candidate.achievement.id] = (candidate.score, requirement)
 
+    # Score every page-1 achievement against the JD, not just the ones that made
+    # a requirement's top-k, so each page-1 role keeps its most relevant bullets.
+    page_one_roles = {(e.company, e.role) for e in profile.experience if e.page == 1}
+    relevance = score_against_jd(
+        classification.key_requirements,
+        [a for a in achievements if (a.company, a.role) in page_one_roles],
+    )
+
     rewrite_notes = ["## Rewrites", ""]
     roles: List[CVRole] = []
     for entry in profile.experience:
         role_achievements = [a for a in achievements if a.company == entry.company and a.role == entry.role]
+        limit = entry.max_bullets
         if entry.page == 1:
-            # Most JD-relevant first; unmatched achievements go last.
-            role_achievements.sort(key=lambda a: best_match.get(a.id, (float("-inf"),))[0], reverse=True)
-        if entry.max_bullets is not None:
-            role_achievements = role_achievements[: entry.max_bullets]
+            role_achievements.sort(key=lambda a: relevance.get(a.id, float("-inf")), reverse=True)
+            if entry.categories and classification.role_category not in entry.categories:
+                limit = entry.min_bullets  # role is off-target for this JD: keep it short
+        if limit is not None:
+            role_achievements = role_achievements[:limit]
 
         bullets = []
         for achievement in role_achievements:
@@ -142,7 +152,7 @@ def run_pipeline(jd_text: str, top_k: int = 3) -> PipelineResult:
                 CVBullet(
                     text=text,
                     highlights=achievement.highlights,
-                    relevance=match[0] if match else None,
+                    relevance=relevance.get(achievement.id),
                     achievement_id=achievement.id,
                 )
             )

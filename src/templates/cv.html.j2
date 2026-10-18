@@ -40,6 +40,10 @@
   .edu-degree { font-size: 11pt; font-weight: 600; }
   .edu-row { display: flex; justify-content: space-between; font-size: 10.5pt; margin-bottom: 5pt; }
   .edu-thesis { font-size: 9.6pt; }
+  .project { margin-bottom: 7pt; break-inside: avoid-page; }
+  .project-row { display: flex; justify-content: space-between; align-items: baseline; font-size: 10pt; margin-bottom: 2pt; }
+  .project-name { font-size: 11pt; font-weight: 600; }
+  .project-subtitle { font-size: 10pt; margin-bottom: 2pt; }
   .section { margin-top: 16pt; }
   .skills p { margin: 0 0 9pt; }
 </style>
@@ -81,6 +85,22 @@
     </div>
     {% endfor %}
   </div>
+
+  {% if profile.personal_projects %}
+  <div class="section">
+    <div class="section-title">Personal Projects</div>
+    {% for project in profile.personal_projects %}
+    <div class="project">
+      <div class="project-row">
+        <span class="project-name">{{ project.name }}</span>
+        {% if project.date_range %}<span>{{ project.date_range }}</span>{% endif %}
+      </div>
+      <div class="project-subtitle">{{ project.subtitle }}</div>
+      <div>{{ project.description }}</div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
 
   <div class="section skills">
     <div class="section-title">Skills</div>

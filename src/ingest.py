@@ -1,5 +1,5 @@
 """
-Load raw achievement bullets from a JSON file. Each achievement is already
+Load raw achievement bullets from a JSON file (full-line // comments allowed). Each achievement is already
 an atomic unit (one bullet = one chunk), so no text-splitting is needed here
 -- this module is about loading + validating structure, not chunking logic.
 """
@@ -25,8 +25,9 @@ def load_achievements(path: str = "data/achievements/achievements.json") -> List
     if not file_path.exists():
         raise FileNotFoundError(f"Achievements file not found: {path}")
 
+    # Full-line "//" comments are allowed (used as role group headers in the file).
     with open(file_path, "r", encoding="utf-8") as f:
-        raw = json.load(f)
+        raw = json.loads("".join(line for line in f if not line.lstrip().startswith("//")))
 
     achievements = [Achievement(**item) for item in raw]
     return achievements

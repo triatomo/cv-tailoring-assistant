@@ -18,6 +18,9 @@ class ExperienceEntry(BaseModel):
     page: int = 2  # 1 = tailored + fitted onto the first page; 2 = everything after
     min_bullets: int = 1
     max_bullets: Optional[int] = None  # None = include all bullets for this role
+    # JD role categories (see classify_jd.ROLE_CATEGORIES) this role is relevant
+    # to. For any other JD, a page-1 role is cut to min_bullets. Empty = always relevant.
+    categories: List[str] = []
 
 
 class EducationEntry(BaseModel):
@@ -25,6 +28,13 @@ class EducationEntry(BaseModel):
     school: str
     date_range: str
     thesis: Optional[str] = None
+
+
+class PersonalProject(BaseModel):
+    name: str
+    subtitle: str
+    date_range: Optional[str] = None
+    description: str
 
 
 class RelocationTarget(BaseModel):
@@ -47,6 +57,7 @@ class Profile(BaseModel):
     summary_closing: str = ""
     experience: List[ExperienceEntry]
     education: List[EducationEntry]
+    personal_projects: List[PersonalProject] = []  # page 2, after work experience; not retrieved or rewritten
     skills: List[str]
     hobbies: Optional[str] = None
 

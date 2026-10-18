@@ -44,7 +44,7 @@ def embed_and_index(achievements: List[Achievement], client: QdrantClient, model
     points = []
     for a, vec in zip(achievements, vectors):
         # Qdrant point IDs must be an unsigned int or a UUID -- extract the
-        # numeric suffix from ids like "ach_001" and store the original
+        # numeric suffix from ids like "ach_01" and store the original
         # string id in the payload so we can still reference it downstream.
         numeric_id = int("".join(ch for ch in a.id if ch.isdigit()) or "0")
         points.append(

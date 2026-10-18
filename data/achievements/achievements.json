@@ -1,95 +1,29 @@
 [
+  // ===== Working Student Business Development @ Seven Senders =====
   {
-    "id": "ach_001",
-    "company": "Klarna Bank AB",
-    "role": "AI Engineer",
-    "date_range": "01/2026 - Present",
-    "text": "Designed and built LLM-powered AI agents (the agentic fixing tool) that let non-engineering teams autonomously fix product data, covering tool interface design, prompt engineering, and self-correction loops for production reliability, eliminating engineering tickets and delivering an estimated $1M in annual financial impact.",
-    "tags": ["llm", "agent", "prompt-engineering", "production-ai"],
-    "highlights": ["delivering an estimated $1M in annual financial impact"]
+    "id": "ach_01",
+    "company": "Seven Senders",
+    "role": "Working Student Business Development",
+    "date_range": "10/2018 - 05/2019",
+    "text": "Streamlined data workflows and reporting by automating processes in Looker, Excel, and VBA, reducing team workload by 5 hours weekly while improving invoicing accuracy. Designed real-time dashboards and scheduled reports for stakeholders.",
+    "tags": ["looker", "vba", "reporting", "dashboards", "automation"],
+    "highlights": ["reducing team workload by 5 hours weekly"]
   },
+
+  // ===== Working Student Engineering @ Klarna Bank AB =====
   {
-    "id": "ach_002",
+    "id": "ach_02",
     "company": "Klarna Bank AB",
-    "role": "AI Engineer",
-    "date_range": "01/2026 - Present",
-    "text": "Automated product data enrichment by building and maintaining end-to-end MLOps pipelines on Python and Airflow, spanning data preprocessing, LLM-based labeling, model training, evaluation, and serving, to improve catalog accuracy across Klarna's shopping experience.",
-    "tags": ["mlops", "pipeline", "llm", "airflow", "python"],
-    "highlights": ["improve catalog accuracy across Klarna's shopping experience"]
+    "role": "Working Student Engineering",
+    "date_range": "07/2019 - 01/2020",
+    "text": "Contributed to a machine learning initiative aimed at user identification, resulting in a 6% increase in identified customers. Supported migration between financial risk platforms by implementing business logic, writing unit tests, and validating node changes through deployment stages.",
+    "tags": ["machine-learning", "testing", "migration"],
+    "highlights": ["6% increase in identified customers"]
   },
+
+  // ===== Data Scientist @ Klarna Bank AB =====
   {
-    "id": "ach_003",
-    "company": "Klarna Bank AB",
-    "role": "AI Engineer",
-    "date_range": "01/2026 - Present",
-    "text": "Own LLMOps observability and reliability for production ML serving on Kubernetes (models served via Triton Inference Server), monitored via Argo and Datadog, including a postprocessing pipeline refactor that cut production API response time by ~80% (p50: 33ms -> 6ms).",
-    "tags": ["llmops", "observability", "kubernetes", "monitoring", "performance", "triton", "model-serving"],
-    "highlights": ["cut production API response time by ~80% (p50: 33ms -> 6ms)"]
-  },
-  {
-    "id": "ach_004",
-    "company": "Klarna Bank AB",
-    "role": "Data Engineer",
-    "date_range": "12/2021 - 01/2026",
-    "text": "Designed and maintained production-grade ETL pipelines in Python and SQL Redshift, orchestrated with Airflow and validated through pytest-based unit and integration tests, delivering trusted, analytics-ready datasets for regulatory reporting and cross-market business expansion while adhering to GDPR regulations, supporting Klarna’s market launches and banking license requirements.",
-    "tags": ["etl", "pipeline", "sql", "redshift", "airflow", "testing", "regulatory"],
-    "highlights": ["supporting Klarna’s market launches and banking license requirements"]
-  },
-  {
-    "id": "ach_005",
-    "company": "Klarna Bank AB",
-    "role": "Data Engineer",
-    "date_range": "12/2021 - 01/2026",
-    "text": "Co-designed a standardized, modular data processing platform across pipelines, leveraging Apache Flink (streaming) and Spark (batch) based on processing needs, with Spock-driven test coverage across shared components. Reduced infrastructure setup time and team alignment overhead by 75%, improved service consistency and governance, and enabled engineers to focus on business logic rather than foundational components.",
-    "tags": ["platform", "flink", "spark", "streaming", "batch", "standardization"],
-    "highlights": ["standardized, modular data processing platform", "Apache Flink (streaming)", "Spark (batch)", "Reduced infrastructure setup time and team alignment overhead by 75%", "improved service consistency"]
-  },
-  {
-    "id": "ach_006",
-    "company": "Klarna Bank AB",
-    "role": "Data Engineer",
-    "date_range": "12/2021 - 01/2026",
-    "text": "Modeled schemas and data semantics in AWS Glue Data Catalog to standardize reporting logic and ensure consistent metric definitions across markets.",
-    "tags": ["data-modeling", "schema", "glue", "governance", "semantic-consistency"]
-  },
-  {
-    "id": "ach_007",
-    "company": "Klarna Bank AB",
-    "role": "Data Engineer",
-    "date_range": "12/2021 - 01/2026",
-    "text": "Developed data-processing applications with Apache Spark and AWS Glue integrating diverse data sources — including Kafka for streaming events and GraphQL APIs for on-demand data retrieval — with the goal of enhancing customer credit history management through automated reporting, reducing relative unpaid delinquency rates by 20% and increasing more than 10% of purchasing active users in a month.",
-    "tags": ["api", "service", "redshift", "caching", "performance", "multi-consumer"],
-    "highlights": ["reducing relative unpaid delinquency rates by 20%"]
-  },
-  {
-    "id": "ach_008",
-    "company": "Klarna Bank AB",
-    "role": "Data Engineer",
-    "date_range": "12/2021 - 01/2026",
-    "text": "Designed and built a Flask REST API to automate secure file transfers between processing and submission services, deployed as a Dockerized solution on EC2 to meet a client's stringent financial regulatory requirements, reducing operational workload by 6 hours per week and eliminating manual errors through improved automation and logging.",
-    "tags": ["api", "flask", "docker", "ec2", "automation"],
-    "highlights": ["reducing operational workload by 6 hours per week and eliminating manual errors"]
-  },
-  {
-    "id": "ach_009",
-    "company": "Klarna Bank AB",
-    "role": "Data Engineer",
-    "date_range": "12/2021 - 01/2026",
-    "text": "Reduced incident response time by implementing data validation and end-to-end monitoring, integrating AWS CloudWatch metrics with Datadog dashboards and Slack notifications for real-time visibility across automated workflows.",
-    "tags": ["monitoring", "observability", "cloudwatch", "datadog", "data-quality"],
-    "highlights": ["Reduced incident response time", "real-time visibility across automated workflows"]
-  },
-  {
-    "id": "ach_010",
-    "company": "Klarna Bank AB",
-    "role": "Data Engineer",
-    "date_range": "12/2021 - 01/2026",
-    "text": "Partnered with internal data consumers as the go-to domain expert on a dedicated Slack channel, clarifying metric definitions, data lineage, and business logic behind debt reporting datasets so stakeholders could trust the data they relied on.",
-    "tags": ["stakeholder", "governance", "domain-expertise", "communication"],
-    "highlights": ["stakeholders could trust the data they relied on"]
-  },
-  {
-    "id": "ach_011",
+    "id": "ach_03",
     "company": "Klarna Bank AB",
     "role": "Data Scientist",
     "date_range": "01/2020 - 05/2022",
@@ -98,7 +32,7 @@
     "highlights": ["133% average volume increase", "5,000% increase in URL reviews per year"]
   },
   {
-    "id": "ach_012",
+    "id": "ach_04",
     "company": "Klarna Bank AB",
     "role": "Data Scientist",
     "date_range": "01/2020 - 05/2022",
@@ -107,7 +41,7 @@
     "highlights": ["improve transaction acceptance and fraud detection metrics"]
   },
   {
-    "id": "ach_013",
+    "id": "ach_05",
     "company": "Klarna Bank AB",
     "role": "Data Scientist",
     "date_range": "01/2020 - 05/2022",
@@ -116,7 +50,7 @@
     "highlights": ["reducing lookup costs by up to 20%"]
   },
   {
-    "id": "ach_014",
+    "id": "ach_06",
     "company": "Klarna Bank AB",
     "role": "Data Scientist",
     "date_range": "01/2020 - 05/2022",
@@ -124,8 +58,64 @@
     "tags": ["migration", "caching", "leadership", "reliability"],
     "highlights": ["preventing cost duplication", "improving data consistency", "reducing timeouts by 11%"]
   },
+
+  // ===== Data Engineer @ Klarna Bank AB =====
   {
-    "id": "ach_015",
+    "id": "ach_07",
+    "company": "Klarna Bank AB",
+    "role": "Data Engineer",
+    "date_range": "12/2021 - 01/2026",
+    "text": "Designed and maintained production-grade ETL pipelines in Python and SQL Redshift, orchestrated with Airflow and validated through pytest-based unit and integration tests, delivering trusted, analytics-ready datasets for regulatory reporting and cross-market business expansion while adhering to GDPR regulations, supporting Klarna’s market launches and banking license requirements.",
+    "tags": ["etl", "pipeline", "sql", "redshift", "airflow", "testing", "regulatory"],
+    "highlights": ["supporting Klarna’s market launches and banking license requirements"]
+  },
+  {
+    "id": "ach_08",
+    "company": "Klarna Bank AB",
+    "role": "Data Engineer",
+    "date_range": "12/2021 - 01/2026",
+    "text": "Co-designed a standardized, modular data processing platform across pipelines, leveraging Apache Flink (streaming) and Spark (batch) based on processing needs, with Spock-driven test coverage across shared components. Reduced infrastructure setup time and team alignment overhead by 75%, improved service consistency and governance, and enabled engineers to focus on business logic rather than foundational components.",
+    "tags": ["platform", "flink", "spark", "streaming", "batch", "standardization"],
+    "highlights": ["standardized, modular data processing platform", "Apache Flink (streaming)", "Spark (batch)", "Reduced infrastructure setup time and team alignment overhead by 75%", "improved service consistency"]
+  },
+  {
+    "id": "ach_09",
+    "company": "Klarna Bank AB",
+    "role": "Data Engineer",
+    "date_range": "12/2021 - 01/2026",
+    "text": "Developed data-processing applications with Apache Spark and AWS Glue integrating diverse data sources — including Kafka for streaming events and GraphQL APIs for on-demand data retrieval — with the goal of enhancing customer credit history management through automated reporting, reducing relative unpaid delinquency rates by 20% and increasing more than 10% of purchasing active users in a month.",
+    "tags": ["api", "service", "redshift", "caching", "performance", "multi-consumer"],
+    "highlights": ["reducing relative unpaid delinquency rates by 20%"]
+  },
+  {
+    "id": "ach_10",
+    "company": "Klarna Bank AB",
+    "role": "Data Engineer",
+    "date_range": "12/2021 - 01/2026",
+    "text": "Designed and built a Flask REST API to automate secure file transfers between processing and submission services, deployed as a Dockerized solution on EC2 to meet a client's stringent financial regulatory requirements, reducing operational workload by 6 hours per week and eliminating manual errors through improved automation and logging.",
+    "tags": ["api", "flask", "docker", "ec2", "automation"],
+    "highlights": ["reducing operational workload by 6 hours per week and eliminating manual errors"]
+  },
+  {
+    "id": "ach_11",
+    "company": "Klarna Bank AB",
+    "role": "Data Engineer",
+    "date_range": "12/2021 - 01/2026",
+    "text": "Reduced incident response time by implementing data validation and end-to-end monitoring, integrating AWS CloudWatch metrics with Datadog dashboards and Slack notifications for real-time visibility across automated workflows.",
+    "tags": ["monitoring", "observability", "cloudwatch", "datadog", "data-quality"],
+    "highlights": ["Reduced incident response time", "real-time visibility across automated workflows"]
+  },
+  {
+    "id": "ach_12",
+    "company": "Klarna Bank AB",
+    "role": "Data Engineer",
+    "date_range": "12/2021 - 01/2026",
+    "text": "Translated ambiguous client requirements into concrete project scope within Klarna's data model, leading collaboration between external clients and internal stakeholders (legal, underwriting, and others), and acted as the go-to domain expert on a dedicated Slack channel, clarifying metric definitions and business logic so stakeholders across the business could trust the data they relied on.",
+    "tags": ["stakeholder", "governance", "domain-expertise", "communication", "client requirements", "translate"],
+    "highlights": ["stakeholders could trust the data they relied on"]
+  },
+  {
+    "id": "ach_13",
     "company": "Klarna Bank AB",
     "role": "Data Engineer",
     "date_range": "12/2021 - 01/2026",
@@ -133,61 +123,49 @@
     "tags": ["ci-cd", "jenkins", "leadership", "infrastructure"]
   },
   {
-    "id": "ach_016",
+    "id": "ach_14",
     "company": "Klarna Bank AB",
     "role": "Data Engineer",
     "date_range": "12/2021 - 01/2026",
-    "text": "Co-designed a governed, canonical data model turning a dozen scattered raw event streams (orders, balances, payment obligations) into one consistent, queryable representation for downstream services, with the loan grain as a key modeled entity.",
-    "tags": ["data-modeling", "canonical-model", "grain", "schema-design"]
+    "text": "Co-designed a governed, canonical data model turning a dozen scattered raw event streams (orders, balances, payment obligations) into one consistent, queryable representation for downstream services, with the loan grain as a key modeled entity, and modeled schemas and data semantics in AWS Glue Data Catalog to standardize reporting logic and ensure consistent metric definitions across markets.",
+    "tags": ["data-modeling", "canonical-model", "grain", "schema-design", "schema", "glue", "governance", "semantic-consistency"],
+    "highlights": ["governed, canonical data model", "consistent metric definitions across markets"]
   },
+
+  // ===== AI Engineer @ Klarna Bank AB =====
   {
-    "id": "ach_017",
-    "company": "Klarna Bank AB",
-    "role": "Data Engineer",
-    "date_range": "12/2021 - 01/2026",
-    "text": "Defined an explicit schema versioning strategy for a multi-consumer data contract: additive, nullable changes evolve in place, while breaking changes get a new versioned table with dual-write and a defined consumer migration plan. Schema changes are code-defined (Avro), generating an ordered migration checked into Git and peer-reviewed via pull request.",
-    "tags": ["versioning", "schema-evolution", "avro", "git", "peer-review", "governance"]
-  },
-  {
-    "id": "ach_018",
-    "company": "Klarna Bank AB",
-    "role": "Data Engineer",
-    "date_range": "12/2021 - 01/2026",
-    "text": "Built a monthly batch reporting pipeline ingesting Kafka streams stored in Iceberg format in S3; built a Glue/Spark job producing a common table used across multiple reports, plus a client-specific Glue job outputting the exact data points required, followed by a formatting and submission service.",
-    "tags": ["kafka", "iceberg", "glue", "spark", "s3", "batch", "pipeline-architecture"]
-  },
-  {
-    "id": "ach_019",
-    "company": "Klarna Bank AB",
-    "role": "Working Student Engineering",
-    "date_range": "07/2019 - 01/2020",
-    "text": "Contributed to a machine learning initiative aimed at user identification, resulting in a 6% increase in identified customers. Supported migration between financial risk platforms by implementing business logic, writing unit tests, and validating node changes through deployment stages.",
-    "tags": ["machine-learning", "testing", "migration"],
-    "highlights": ["6% increase in identified customers"]
-  },
-  {
-    "id": "ach_020",
-    "company": "Seven Senders",
-    "role": "Working Student Business Development",
-    "date_range": "10/2018 - 05/2019",
-    "text": "Streamlined data workflows and reporting by automating processes in Looker, Excel, and VBA, reducing team workload by 5 hours weekly while improving invoicing accuracy. Designed real-time dashboards and scheduled reports for stakeholders.",
-    "tags": ["looker", "vba", "reporting", "dashboards", "automation"],
-    "highlights": ["reducing team workload by 5 hours weekly"]
-  },
-  {
-    "id": "ach_021",
-    "company": "Personal / Side Project",
-    "role": "Side Project",
-    "date_range": "2026",
-    "text": "Built a near real-time analytics data pipeline streaming Postgres changes through Debezium (CDC), Kafka, and Spark into a FastAPI serving layer, built from a blank repo without relying on any company tooling.",
-    "tags": ["cdc", "kafka", "spark", "fastapi", "side-project", "streaming"]
-  },
-  {
-    "id": "ach_022",
+    "id": "ach_15",
     "company": "Klarna Bank AB",
     "role": "AI Engineer",
     "date_range": "01/2026 - Present",
-    "text": "Reduced LLM inference costs by consolidating multiple field predictions into a single LLM call per product, and by implementing perceptual hashing (dHash) and pixel-rank deduplication to filter redundant images before they reached the LLM for evaluation, cutting the volume of costly multi-modal inference calls.",
+    "text": "Designed and built LLM-powered agentic fixing tool used by non-engineering teams to autonomously fix product data, covering tool interface design, prompt engineering, and self-correction loops for production reliability, eliminating engineering tickets and delivering an estimated $1M in annual financial impact.",
+    "tags": ["llm", "agent", "prompt-engineering", "production-ai", "data-platform"],
+    "highlights": ["delivering an estimated $1M in annual financial impact"]
+  },
+  {
+    "id": "ach_16",
+    "company": "Klarna Bank AB",
+    "role": "AI Engineer",
+    "date_range": "01/2026 - Present",
+    "text": "Automated product data enrichment by building and maintaining end-to-end MLOps pipelines on Python and Airflow, spanning data preprocessing, LLM-based labeling, model training, evaluation, and serving, to improve catalog accuracy across Klarna's shopping experience.",
+    "tags": ["mlops", "pipeline", "llm", "airflow", "python"],
+    "highlights": ["improve catalog accuracy across Klarna's shopping experience"]
+  },
+  {
+    "id": "ach_17",
+    "company": "Klarna Bank AB",
+    "role": "AI Engineer",
+    "date_range": "01/2026 - Present",
+    "text": "Own LLMOps observability and reliability for production model serving on Kubernetes and Triton, including a postprocessing pipeline refactor that cut production API response time by ~80% (p50: 33ms -> 6ms).",
+    "tags": ["llmops", "observability", "kubernetes", "monitoring", "performance", "triton", "model-serving"],
+    "highlights": ["cut production API response time by ~80% (p50: 33ms -> 6ms)"]
+  },
+  {
+    "id": "ach_18",
+    "company": "Klarna Bank AB",
+    "role": "AI Engineer",
+    "date_range": "01/2026 - Present",
+    "text": "Reduced LLM inference costs in a production multi-modal pipeline by batching predictions into fewer calls and deduplicating redundant images before evaluation, cutting the volume of costly multi-modal inference calls.",
     "tags": ["llm", "cost-reduction", "multi-modal", "deduplication", "production-ai"],
     "highlights": ["cutting the volume of costly multi-modal inference calls"]
   }

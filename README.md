@@ -50,9 +50,12 @@ cross-encoder reranking, and a Corrective-RAG-style self-check loop applied to
 9. **Render** (`src/render_cv.py`, `src/templates/cv.html.j2`) -- lays out the
   CV as HTML and prints it to PDF with headless Chrome. Page 1: summary plus the
    roles marked `"page": 1` in `data/profile.json` (AI Engineer, Data Engineer),
-   filled with the most JD-relevant bullets; if page 1 overflows, the least
+   filled with the most JD-relevant bullets (every page-1 bullet is scored
+   against the JD's requirements). A role whose `categories` don't include the
+   JD's role category is cut to its `min_bullets` -- e.g. only the 2 most
+   relevant AI Engineer bullets for an analytics JD. If page 1 overflows, the least
    relevant bullets are dropped (down to each role's `min_bullets`). Page 2:
-   the remaining roles, education, skills. Phrases listed in an achievement's
+   the remaining roles, education, personal projects, skills. Phrases listed in an achievement's
    `highlights` are rendered in bold.
 10. **CLI** (`src/cli.py`) -- wires all of the above together into one command.
 
@@ -86,7 +89,7 @@ instead of a paid API.
   (a starter set is already included -- edit/extend it with your real bullets).
    Each achievement's `company` + `role` must match an entry in
    `data/profile.json`, which holds the rest of the CV (header, role order and
-   page, education, skills). Its `relocation` map lists the only countries the
+   page, education, personal projects, skills). Its `relocation` map lists the only countries the
    CV may claim relocation to, each with a contact-line `note` and location
    `keywords`: when the JD mentions one of those locations, the contact line
    ends with that country's note (the first-mentioned country wins if the JD

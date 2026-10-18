@@ -27,7 +27,7 @@ CHROME_PATH = os.getenv("CHROME_PATH", "/Applications/Google Chrome.app/Contents
 class CVBullet(BaseModel):
     text: str
     highlights: List[str] = []
-    relevance: Optional[float] = None  # best rerank score against any JD requirement; None = not retrieved
+    relevance: Optional[float] = None  # best rerank score against any JD requirement; None = not scored (page 2)
     achievement_id: str
 
 
