@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="{{ labels.html_lang }}">
 <head>
 <meta charset="utf-8">
 <title>{{ profile.name }} - CV</title>
@@ -54,7 +54,7 @@
   <div class="headline">{{ headline }}</div>
   <div class="summary">{{ summary | bold_markdown }}</div>
 
-  <div class="section-title">Work Experience</div>
+  <div class="section-title">{{ labels.work_experience }}</div>
   {% set ns = namespace(prev_company=None, prev_page=1) %}
   {% for role in roles %}
     {% set new_company = role.company != ns.prev_company %}
@@ -76,19 +76,19 @@
 
   {% if not page_one_only %}
   <div class="section">
-    <div class="section-title">Education</div>
+    <div class="section-title">{{ labels.education }}</div>
     {% for edu in profile.education %}
     <div class="edu">
       <div class="edu-degree">{{ edu.degree }}</div>
       <div class="edu-row"><span>{{ edu.school }}</span><span>{{ edu.date_range }}</span></div>
-      {% if edu.thesis %}<div class="edu-thesis">Thesis: "{{ edu.thesis }}"</div>{% endif %}
+      {% if edu.thesis %}<div class="edu-thesis">{{ labels.thesis }}: "{{ edu.thesis }}"</div>{% endif %}
     </div>
     {% endfor %}
   </div>
 
   {% if profile.personal_projects %}
   <div class="section">
-    <div class="section-title">Personal Projects</div>
+    <div class="section-title">{{ labels.personal_projects }}</div>
     {% for project in profile.personal_projects %}
     <div class="project">
       <div class="project-row">
@@ -103,9 +103,9 @@
   {% endif %}
 
   <div class="section skills">
-    <div class="section-title">Skills</div>
+    <div class="section-title">{{ labels.skills }}</div>
     <p>{{ profile.skills | join(", ") }}</p>
-    {% if profile.hobbies %}<p><strong>Hobbies:</strong> {{ profile.hobbies }}</p>{% endif %}
+    {% if profile.hobbies %}<p><strong>{{ labels.hobbies }}:</strong> {{ profile.hobbies }}</p>{% endif %}
   </div>
   {% endif %}
 </body>

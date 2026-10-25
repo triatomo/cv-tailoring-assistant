@@ -112,7 +112,9 @@ def apply_role_boost(
 
 @lru_cache(maxsize=1)
 def _cross_encoder() -> CrossEncoder:
-    return CrossEncoder(RERANKER_MODEL)
+    # On Apple silicon sentence-transformers picks MPS, which ran this model 6-9x
+    # slower than CPU (~8s vs ~1s per 15-bullet rerank).
+    return CrossEncoder(RERANKER_MODEL, device="cpu")
 
 
 def rerank(query: str, candidate_ids: List[str], achievements_by_id: Dict[str, Achievement], top_k: int = 5) -> List[RetrievedAchievement]:

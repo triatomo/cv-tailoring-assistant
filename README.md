@@ -33,35 +33,36 @@ cross-encoder reranking, and a Corrective-RAG-style self-check loop applied to
    reverts to the original wording instead of using the rewrite.
 7. **Gaps** (`src/gaps.py`) -- for requirements with no strong retrieval match,
   outputs an honest gap statement (with the closest adjacent experience, if any)
-   instead of forcing a weak bullet to fit.
-8. **Summary** (`src/summary_agent.py`, `src/summary.py`) -- a tool-calling agent
-  (Ollama, `SUMMARY_AGENT_MODEL`, default `gemma4:31b-cloud`) reads the full JD,
-  decides what it cares about most, looks up matching achievements with a
-  `search_achievements` tool, and revises its draft until a `check_draft` tool
-  (the deterministic checks below) passes; only a passing draft is used. With
-  `LLM_BACKEND=anthropic` the one-shot `src/summary.py` generator runs instead.
-  Either way it writes a per-JD headline and profile
-  summary. The first and last sentences are fixed (`summary_opening` and
-   `summary_closing` in `data/profile.json`), so the years-of-experience
-   framing never drifts; the LLM writes only the headline and 2-3 middle
-   sentences, built from the achievements that matched the JD's requirements.
-   Deterministic checks reject seniority inflation ("expert", "proven",
-   "leading", ...), years claims, first-person wording, and skill dumps.
-   The headline is the JD's role name, set in code rather than by the
-   LLM: seniority is kept, while parentheticals and any suffix after " - " or
-   "," are removed ("Lead Analytics Engineer (F/M/X)" -> "Lead Analytics
-   Engineer", "Senior AI Engineer - Growth" -> "Senior AI Engineer"), so it
-   never carries a company or team name. The middle sentences summarize
-   themes across achievements rather than repeating them: a check rejects any
-   run of more than 5 words copied from a bullet and any metric, while every
-   named tool and ownership word ("led", "owned") must appear in the achievements. After 3 failed attempts,
-   the default summary from `data/profile.json` is used instead (the headline
-   still follows the JD title when possible).
+   instead of forcing a weak bullet to fit. A bullet matches a requirement when
+   its rerank score is at least `MATCH_THRESHOLD` (0.04), or when the requirement
+   names one of the candidate's skills or achievement tags that the bullet names
+   or is tagged with ("Apache Airflow" -> a bullet mentioning Airflow). Rerank
+   scores alone miss short tool requirements, and tags listed in `GENERIC_TAGS`
+   ("automation", "platform", ...) are too broad to count.
+8. **Summary** (`src/summary.py`) -- runs the `cv-summary` skill from
+   Claude Desktop through the Claude Code CLI (`claude -p`, no tools) on the
+   Claude Pro subscription. The skill's `SKILL.md` (found under
+   `~/.claude/skills/**/cv-summary/`, or `CV_SUMMARY_SKILL`) is the system
+   prompt, so edits to the skill apply here too; the full JD and the CV (roles,
+   achievements, projects, education, skills, languages) are the input.
+   API-key variables are removed from the CLI's environment, and the run is
+   aborted unless the CLI reports subscription auth (`apiKeySource: none`), so
+   it never bills the API. Run `claude` and `/login` with the Pro account once.
+   `CV_SUMMARY_MODEL` picks the model (default: the CLI's default). The skill
+   writes the whole paragraph, closing sentence included. The headline is the
+   JD's role name, set in code: seniority is kept, while parentheticals and any
+   suffix after " - " or "," are removed ("Lead Analytics Engineer (F/M/X)" ->
+   "Lead Analytics Engineer"). The review notes list the JD must-haves the
+   summary covers and an alternative version. A draft that is far off 60-100
+   words, in first person, or in markdown is retried once; after that the
+   default summary from `data/profile.json` is used.
 9. **Render** (`src/render_cv.py`, `src/templates/cv.html.j2`) -- lays out the
   CV as HTML and prints it to PDF with headless Chrome. Page 1: summary plus the
    roles marked `"page": 1` in `data/profile.json` (AI Engineer, Data Engineer),
-   filled with the most JD-relevant bullets (every page-1 bullet is scored
-   against the JD's requirements). A role whose `categories` don't include the
+   filled with the bullets that match a JD requirement (see Gaps for what
+   counts as a match), most relevant first; bullets matching nothing only fill
+   a role up to its `min_bullets`. They are listed in the order the JD lists the
+   requirement each one answers. A role whose `categories` don't include the
    JD's role category is cut to its `min_bullets` -- e.g. only the 2 most
    relevant AI Engineer bullets for an analytics JD. If page 1 overflows, the least
    relevant bullets are dropped (down to each role's `min_bullets`). Page 2:
@@ -139,12 +140,26 @@ python src/cli.py --jd local/jd/AIEngineer.pdf --out local/output/AIEngineer.pdf
 
 This writes only the CV PDF to `local/output/AIEngineer.pdf` (default:
 `tailored_cv.pdf`) and prints the review notes (rewrites, bullets dropped to fit
-page 1, gaps) to the terminal.
+page 1, gaps) to the terminal. Use `--include ach_11,ach_13` to force specific
+achievements onto the CV: they take their role's bullet slots first and are never
+dropped to fit page 1.
 
 Against pasted JD text:
 
 ```
 python src/cli.py --jd-text "paste the full JD text here"
+```
+
+German CV (`src/translate_cv.py`): tailoring and its honesty checks run in
+English, then the summary, bullets, contact note, degrees, projects, hobbies and
+section titles are translated before page 1 is fitted. Tool names, numbers, and
+bold phrases must survive translation (checked in code); a text that keeps
+failing stays in English and is listed in the review notes. Job titles, the
+headline, and thesis titles are not translated. A JD in another language works
+too: its requirements are extracted in English for matching.
+
+```
+python src/cli.py --jd local/jd/AIEngineer.pdf --lang de --out local/output/AIEngineer_de.pdf
 ```
 
 

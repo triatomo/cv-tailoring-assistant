@@ -11,7 +11,7 @@ import re
 import subprocess
 import tempfile
 from pathlib import Path
-from typing import List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple
 
 from jinja2 import Environment, FileSystemLoader
 from markupsafe import Markup, escape
@@ -29,6 +29,7 @@ class CVBullet(BaseModel):
     highlights: List[str] = []
     relevance: Optional[float] = None  # best rerank score against any JD requirement; None = not scored (page 2)
     achievement_id: str
+    pinned: bool = False  # forced onto the CV with --include; never dropped to fit page 1
 
 
 class CVRole(BaseModel):
@@ -64,9 +65,16 @@ def _environment() -> Environment:
     return env
 
 
-def render_html(profile: Profile, headline: str, summary: str, roles: List[CVRole], page_one_only: bool = False) -> str:
+def render_html(
+    profile: Profile, headline: str, summary: str, roles: List[CVRole],
+    page_one_only: bool = False, labels: Optional[Dict[str, str]] = None,
+) -> str:
+    """labels: the template's fixed text (section titles, ...); see translate_cv.LABELS."""
+    from translate_cv import LABELS  # translate_cv imports this module
+
     template = _environment().get_template("cv.html.j2")
     return template.render(
+        labels=labels or LABELS["en"],
         profile=profile,
         headline=headline,
         summary=summary,
@@ -104,15 +112,18 @@ def _page_count(html: str) -> int:
         return len(PdfReader(str(pdf_path)).pages)
 
 
-def fit_page_one(profile: Profile, headline: str, summary: str, roles: List[CVRole]) -> Tuple[List[CVBullet], bool]:
+def fit_page_one(
+    profile: Profile, headline: str, summary: str, roles: List[CVRole], labels: Optional[Dict[str, str]] = None,
+) -> Tuple[List[CVBullet], bool]:
     """Drop the least relevant page-1 bullets until page 1 fits. Returns (dropped bullets, fits)."""
     dropped: List[CVBullet] = []
-    while _page_count(render_html(profile, headline, summary, roles, page_one_only=True)) > 1:
+    while _page_count(render_html(profile, headline, summary, roles, page_one_only=True, labels=labels)) > 1:
         candidates = [
             (role, bullet)
             for role in roles
             if role.page == 1 and len(role.bullets) > role.min_bullets
             for bullet in role.bullets
+            if not bullet.pinned
         ]
         if not candidates:
             return dropped, False  # every role is at its minimum and page 1 still overflows
@@ -125,9 +136,12 @@ def fit_page_one(profile: Profile, headline: str, summary: str, roles: List[CVRo
     return dropped, True
 
 
-def write_cv(profile: Profile, headline: str, summary: str, roles: List[CVRole], pdf_path: Path) -> None:
+def write_cv(
+    profile: Profile, headline: str, summary: str, roles: List[CVRole], pdf_path: Path,
+    labels: Optional[Dict[str, str]] = None,
+) -> None:
     """Write the CV PDF; the HTML it is printed from only lives in a temp directory."""
     with tempfile.TemporaryDirectory() as tmp:
         html_path = Path(tmp) / "cv.html"
-        html_path.write_text(render_html(profile, headline, summary, roles), encoding="utf-8")
+        html_path.write_text(render_html(profile, headline, summary, roles, labels=labels), encoding="utf-8")
         html_to_pdf(html_path, pdf_path.resolve())

@@ -46,8 +46,19 @@ Do three things:
      should mirror in their CV (e.g., "semantic layer", "grain", "drift detection",
      "governed metrics"). Focus on distinctive, role-specific terms, not generic
      words like "experience" or "team".
-   - key_requirements: the concrete skills/requirements listed, as short phrases
-     (e.g., "5+ years SQL", "Kubernetes", "dbt or LookML experience").
+   - key_requirements: everything the JD asks the candidate to do or have, as short
+     phrases in the order the JD lists them. Cover BOTH the responsibilities ("what
+     you'll do", e.g. "build and maintain data infrastructure and pipelines",
+     "collaborate with external partners to resolve problems") AND the skills and
+     experience lines (e.g. "incident management and test automation", "Kubernetes",
+     "dbt or LookML experience"). Keep every line -- do not reduce the JD to tool
+     names. Leave out degrees, total years of experience on their own, languages,
+     soft skills on their own ("strong communication"), and location or remote-work
+     conditions: achievements can't demonstrate those.
+
+The candidate's CV material is in English, so write key_terminology and
+key_requirements in English, translating them if the JD is in another language
+(keep tool and product names as written). Copy job_title as written, untranslated.
 
 Respond with ONLY a JSON object, no other text, matching this exact shape:
 {{

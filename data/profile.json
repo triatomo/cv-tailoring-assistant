@@ -14,8 +14,13 @@
   "default_location": "EU citizen, open for relocating within EU or Asia",
   "default_headline": "Data Engineer - AI Platform",
   "default_summary": "Data Engineer with 5+ years building scalable batch and real-time pipelines, and since 2026, the platform layer for production AI/ML systems — **LLM-powered agent tooling** using **pydantic-AI** and **OpenAI SDK**, **ML pipeline** reliability, and **AI** workflow observability. Strong in **SQL** and **ETL/ELT** on **AWS (Glue, EC2, Lambda, Redshift, SageMaker)**, **Airflow**, **Flink**, **Spark**, **Iceberg**, and **Kafka**, with a DevOps-oriented approach to **CI/CD**, **IaC**, and testing (**pytest**). Translates business and regulatory requirements into consistent, reusable data transformations — partnering closely with financial analysts and legal teams to keep metrics accurate across markets. Autonomous and curious, comfortable solving ambiguous problems with minimal supervision in fast-moving environments.",
-  "summary_opening": "Data Engineer with 5+ years building scalable batch and real-time pipelines on **AWS**, **Airflow**, **Spark**, and **Kafka**, and since 01/2026 an AI Engineer building production **LLM** agent tooling and ML pipelines.",
-  "summary_closing": "Autonomous and curious, comfortable solving ambiguous problems with minimal supervision in fast-moving environments.",
+  "years_of_experience": "5+",
+  "domain": "banking sector and fintech at Klarna Bank AB, a licensed bank: data work under banking regulation and compliance rules (banking license requirements, regulatory reporting, GDPR)",
+  "languages": ["English", "German", "Indonesian", "Spanish"],
+  "term_evidence": {
+    "test automation": ["unit and integration tests", "unit tests"],
+    "incident management": ["incident response"]
+  },
   "experience": [
     {
       "company": "Klarna Bank AB",
@@ -25,7 +30,8 @@
       "page": 1,
       "min_bullets": 2,
       "max_bullets": 4,
-      "categories": ["AI/ML Engineer", "AI Data Engineer", "Data Scientist"]
+      "categories": ["AI/ML Engineer", "AI Data Engineer", "Data Scientist"],
+      "full_categories": ["AI/ML Engineer", "AI Data Engineer"]
     },
     {
       "company": "Klarna Bank AB",
@@ -35,7 +41,8 @@
       "page": 1,
       "min_bullets": 3,
       "max_bullets": 6,
-      "categories": ["Data Engineer", "AI Data Engineer", "BI/Analytics", "Platform/Infra"]
+      "categories": ["Data Engineer", "AI Data Engineer", "BI/Analytics", "Platform/Infra", "Other"],
+      "full_categories": ["Data Engineer"]
     },
     {
       "company": "Klarna Bank AB",
@@ -79,16 +86,16 @@
       "categories": ["Data Engineer", "AI Data Engineer", "BI/Analytics", "Data Platform/Infra", "Other"],
       "skills": [
         "Apache Airflow", "Apache Flink", "Apache Iceberg", "Apache Spark", "Apache Superset", "AWS",
-        "Datadog", "Docker", "FastAPI", "Flask", "GitHub", "GCP", "GraphQL", "Java", "Jenkins",
-        "Kafka", "Looker", "NGINX", "pytest", "Python", "Redshift",
+        "Bitbucket", "Confluence", "Datadog", "Docker", "FastAPI", "Flask", "GitHub", "GCP", "GraphQL",
+        "Java", "Jenkins", "Jira", "Kafka", "Looker", "NGINX", "pandas", "pytest", "Python", "Redshift",
         "SFTP", "Snowflake", "SQL", "Terraform"
       ]
     },
     "AI Engineer": {
       "categories": ["AI/ML Engineer", "AI Data Engineer", "Data Scientist", "AI Platform/Infra"],
       "skills": [
-        "Apache Airflow", "Apache Spark", "Apache Superset", "Datadog", "Docker", "FastAPI", "FastMCP", "GitHub",
-        "Harness engineering", "Kafka", "LLM orchestration", "Machine Learning", "MLOps",
+        "Apache Airflow", "Apache Spark", "Apache Superset", "Bitbucket", "Confluence", "Datadog", "Docker",
+        "FastAPI", "FastMCP", "GitHub", "Harness engineering", "Jira", "Kafka", "LLM orchestration", "Machine Learning", "MLOps",
         "OpenAI SDK", "pydantic-AI", "pytest", "Python", "RAG",
         "SQL", "Terraform", "Triton Inference Server"
       ]

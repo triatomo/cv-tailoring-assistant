@@ -21,6 +21,9 @@ class ExperienceEntry(BaseModel):
     # JD role categories (see classify_jd.ROLE_CATEGORIES) this role is relevant
     # to. For any other JD, a page-1 role is cut to min_bullets. Empty = always relevant.
     categories: List[str] = []
+    # JD role categories this role is the core of: it is filled to max_bullets and
+    # page-1 fitting trims the other roles first. Must be a subset of categories.
+    full_categories: List[str] = []
 
 
 class EducationEntry(BaseModel):
@@ -56,10 +59,15 @@ class Profile(BaseModel):
     default_location: Optional[str] = None  # used when the JD names none of the relocation countries
     default_headline: str
     default_summary: str
-    # Fixed first/last sentences of every tailored summary; the LLM only writes
-    # what goes between them, so the seniority framing never drifts.
-    summary_opening: str
-    summary_closing: str = ""
+    # Years of (data) experience, e.g. "5+"; given to the summary writer.
+    years_of_experience: str
+    # The industry the candidate worked in, in plain words; given to the summary writer.
+    domain: str = ""
+    # Languages spoken fluently; given to the summary writer.
+    languages: List[str] = []
+    # JD term -> phrases in the achievements that honestly back it, for terms the
+    # material means but never spells out ("test automation" <- "integration tests").
+    term_evidence: Dict[str, List[str]] = {}
     experience: List[ExperienceEntry]
     education: List[EducationEntry]
     personal_projects: List[PersonalProject] = []  # page 2, after work experience; not retrieved or rewritten
