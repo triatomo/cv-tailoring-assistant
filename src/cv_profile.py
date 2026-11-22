@@ -97,9 +97,10 @@ def location_note(profile: Profile, jd_text: str) -> Optional[str]:
     return min(mentions)[1] if mentions else profile.default_location
 
 
-def with_relocation(profile: Profile, jd_text: str) -> Profile:
-    """Copy of the profile whose contact line ends with the JD-specific location note."""
-    note = location_note(profile, jd_text)
+def with_relocation(profile: Profile, jd_text: str, note: Optional[str] = None) -> Profile:
+    """Copy of the profile whose contact line ends with the JD-specific location note
+    (or the given note, which overrides the profile's relocation rules)."""
+    note = note or location_note(profile, jd_text)
     if not note:
         return profile
     return profile.model_copy(update={"contact": profile.contact + [note]})

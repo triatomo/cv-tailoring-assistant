@@ -65,27 +65,18 @@
     "company": "Klarna Bank AB",
     "role": "Data Engineer",
     "date_range": "12/2021 - 01/2026",
-    "text": "Built and maintained production-grade ETL pipelines in Python and SQL Redshift, orchestrated with Airflow and validated through pytest-based unit and integration tests, delivering trusted, analytics-ready datasets for regulatory reporting and cross-market business expansion while adhering to GDPR regulations, supporting Klarna’s market launches and banking license requirements.",
-    "tags": ["etl", "pipeline", "sql", "redshift", "airflow", "testing", "regulatory"],
-    "highlights": ["supporting Klarna’s market launches and banking license requirements"]
+    "text": "Built and maintained production-grade ETL pipelines in Python and SQL on Redshift, orchestrated with Airflow and tested with pytest, delivering trusted, analytics-ready datasets for regulatory and credit reporting under GDPR. Supported Klarna’s market launches and banking license requirements and reduced relative unpaid delinquency rates by 20%.",
+    "tags": ["etl", "pipeline", "sql", "redshift", "airflow", "testing", "regulatory", "gdpr", "credit-reporting"],
+    "highlights": ["Supported Klarna’s market launches and banking license requirements", "reduced relative unpaid delinquency rates by 20%"]
   },
   {
     "id": "ach_08",
     "company": "Klarna Bank AB",
     "role": "Data Engineer",
     "date_range": "12/2021 - 01/2026",
-    "text": "Co-designed a standardized, modular data processing platform across pipelines, leveraging Apache Flink (streaming) and Spark (batch) based on processing needs, with Spock-driven test coverage across shared components. Reduced infrastructure setup time and team alignment overhead by 75%, improved service consistency and governance, and enabled engineers to focus on business logic rather than foundational components.",
+    "text": "Co-designed a standardized, modular data processing platform with shared, test-driven components, running Apache Flink for streaming and Spark for batch workloads. Cut infrastructure setup time and team alignment overhead by 75%, improving consistency and governance across services so engineers could focus on business logic instead of plumbing.",
     "tags": ["platform", "flink", "spark", "streaming", "batch", "standardization"],
-    "highlights": ["standardized, modular data processing platform", "Apache Flink (streaming)", "Spark (batch)", "Reduced infrastructure setup time and team alignment overhead by 75%", "improved service consistency"]
-  },
-  {
-    "id": "ach_09",
-    "company": "Klarna Bank AB",
-    "role": "Data Engineer",
-    "date_range": "12/2021 - 01/2026",
-    "text": "Developed data-processing applications with Apache Spark and AWS Glue integrating diverse data sources — including Kafka for streaming events and GraphQL APIs for on-demand data retrieval — with the goal of enhancing customer credit history management through automated reporting, reducing relative unpaid delinquency rates by 20% and increasing more than 10% of purchasing active users in a month.",
-    "tags": ["api", "service", "redshift", "caching", "performance", "multi-consumer"],
-    "highlights": ["reducing relative unpaid delinquency rates by 20%"]
+    "highlights": ["standardized, modular data processing platform", "Cut infrastructure setup time and team alignment overhead by 75%"]
   },
   {
     "id": "ach_10",
@@ -140,6 +131,15 @@
     "tags": ["data-modeling", "canonical-model", "grain", "schema-design", "schema", "glue", "governance", "semantic-consistency"],
     "highlights": ["governed, canonical data model", "consistent metric definitions across markets"]
   },
+  {
+    "id": "ach_20",
+    "company": "Klarna Bank AB",
+    "role": "Data Engineer",
+    "date_range": "12/2021 - 01/2026",
+    "text": "Provisioned an AWS Step Functions and Lambda workflow in Terraform to run and monitor the Flink job behind customer debt reporting, with Slack alerts on every outcome, preventing silent pipeline failures that had previously delayed reporting by days.",
+    "tags": ["terraform", "iac", "step-functions", "lambda", "alerting", "slack", "reliability", "monitoring", "scheduled-workflow"],
+    "highlights": ["preventing silent pipeline failures"]
+  },
 
   // ===== AI Engineer @ Klarna Bank AB =====
   {
@@ -156,8 +156,8 @@
     "company": "Klarna Bank AB",
     "role": "AI Engineer",
     "date_range": "01/2026 - Present",
-    "text": "Automated product data enrichment by building and maintaining end-to-end MLOps pipelines on Python and Airflow, spanning data preprocessing, LLM-based labeling, model training, evaluation, and serving, to improve catalog accuracy across Klarna's shopping experience.",
-    "tags": ["mlops", "pipeline", "llm", "airflow", "python"],
+    "text": "Automated product data enrichment by building and maintaining end-to-end MLOps pipelines on Python and Airflow, spanning data preprocessing, LLM-based labeling, model training, evaluation, and serving, with a Superset dashboard tracking verified products, to improve catalog accuracy across Klarna's shopping experience.",
+    "tags": ["mlops", "pipeline", "llm", "airflow", "python", "superset", "dashboards", "bi", "reporting", "monitoring", "data-quality", "verification", "evaluation", "agent", "multi-agent", "subagents"],
     "highlights": ["improve catalog accuracy across Klarna's shopping experience"]
   },
   {

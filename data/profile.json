@@ -3,12 +3,20 @@
   "contact": ["triahertomo.me", "restria.hertomo@gmail.com"],
   "relocation": {
     "Spain": {
-      "note": "EU citizen, based in Germany, relocating to Spain",
+      "note": "EU citizen, relocating to Spain",
       "keywords": ["Spain", "España", "Espana", "Madrid", "Barcelona", "Valencia", "Sevilla", "Seville", "Málaga", "Malaga", "Bilbao"]
     },
     "Thailand": {
       "note": "Relocating to Thailand",
       "keywords": ["Thailand", "Bangkok", "Chiang Mai", "Phuket"]
+    },
+    "Remote Europe": {
+      "note": "EU citizen, open for relocating within EU",
+      "keywords": ["Remote Europe", "Remote EU", "Remote EMEA"]
+    },
+    "Berlin": {
+      "note": "EU citizen, based in Berlin",
+      "keywords": ["Berlin", "Germany", "Deutschland"]
     }
   },
   "default_location": "EU citizen, open for relocating within EU or Asia",

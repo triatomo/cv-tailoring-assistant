@@ -35,7 +35,8 @@ CLAUDE_BIN = os.getenv("CLAUDE_BIN", "claude")
 CV_SUMMARY_MODEL = os.getenv("CV_SUMMARY_MODEL", "")
 CLAUDE_TIMEOUT = 300
 MAX_ATTEMPTS = 2
-MIN_WORDS, MAX_WORDS = 45, 130  # the skill asks for ~60-100; leave some slack
+MIN_WORDS, MAX_WORDS = 50, 110  # the skill asks for ~60-100; leave some slack
+MAX_SENTENCES = 5
 
 
 
@@ -73,7 +74,16 @@ Step 2 in your head, then reply with ONLY this JSON object (no prose, no code fe
   "alternative_emphasis": "what the alternative leans toward"
 }
 Plain text only inside the strings: no markdown, no bold markers.
+When the summary names a role for Tria (e.g. "<role> with 5+ years ..."), use one of her
+own job titles listed under "Job titles held", exactly as written and without adding
+seniority: the one closest to the JD. Never use the JD's title unless she held it.
 """
+# Words that end the role phrase at the start of a summary: "<role> with 5+ years ...".
+ROLE_PHRASE = re.compile(
+    r"^((?:[\w/&+-]+\s+){0,4}(?:engineer|scientist|analyst|developer|architect|consultant|specialist))"
+    r"\s+(?:with|who|combining|bringing|pairing)\b",
+    re.IGNORECASE,
+)
 
 
 def jd_headline(job_title: str) -> str:
@@ -109,6 +119,7 @@ def load_skill() -> str:
 
 def cv_text(profile: Profile, achievements: List[Achievement]) -> str:
     lines = [f"# CV of {profile.name}", ""]
+    lines.append("Job titles held: " + ", ".join(held_titles(profile)))
     if profile.domain:
         lines.append(f"Industry: {profile.domain}")
     lines.append(f"Years of experience: {profile.years_of_experience}")
@@ -177,11 +188,24 @@ def _parse(raw: str) -> dict:
     return data
 
 
-def _check(summary: str) -> List[str]:
+def held_titles(profile: Profile) -> List[str]:
+    return list(dict.fromkeys(entry.role for entry in profile.experience))
+
+
+def _check(summary: str, titles: List[str]) -> List[str]:
     issues = []
+    role = ROLE_PHRASE.match(summary)
+    if role and role.group(1).strip().lower() not in {t.lower() for t in titles}:
+        issues.append(
+            f"Opens with the role '{role.group(1).strip()}', which she never held; "
+            f"use one of her job titles exactly: {', '.join(titles)}"
+        )
     words = len(summary.split())
     if not MIN_WORDS <= words <= MAX_WORDS:
         issues.append(f"Summary is {words} words; it must be about 60-100")
+    sentences = len(re.findall(r"[.!?](?=\s|$)", summary))
+    if sentences > MAX_SENTENCES:
+        issues.append(f"Summary has {sentences} sentences; use 3-5")
     if re.search(r"\b(I|my|me)\b", summary):
         issues.append("Written in first person; use implied first person")
     if "**" in summary or "\n" in summary.strip():
@@ -215,7 +239,7 @@ def generate_summary(
             issues = [str(e)]
             continue
         summary = " ".join(data["summary"].split())
-        issues = _check(summary)
+        issues = _check(summary, held_titles(profile))
         if issues:
             continue
         notes = [

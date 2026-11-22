@@ -26,7 +26,7 @@ from rewrite import rewrite_achievement
 from verify import verify_rewrite, get_final_bullet
 from gaps import assess_gap, is_match, judge_matches, tool_terms
 from embed import EMBEDDING_MODEL
-from ingest import load_achievements
+from ingest import Achievement, load_achievements
 from cv_profile import Profile, load_profile, skill_sets_for, with_relocation, with_skills
 from summary import generate_summary
 from render_cv import CVBullet, CVRole, fit_page_one, write_cv
@@ -84,17 +84,27 @@ class PipelineResult(NamedTuple):
     labels: Dict[str, str]
 
 
-def run_pipeline(jd_text: str, top_k: int = 3, include: Optional[Set[str]] = None, lang: str = "en") -> PipelineResult:
+def run_pipeline(
+    jd_text: str,
+    top_k: int = 3,
+    include: Optional[Set[str]] = None,
+    lang: str = "en",
+    keep_wording: Optional[Set[str]] = None,
+    location: Optional[str] = None,
+) -> PipelineResult:
     """include: achievement ids that must be on the CV regardless of relevance.
-    lang: CV language; tailoring runs in English, then the CV is translated."""
+    lang: CV language; tailoring runs in English, then the CV is translated.
+    keep_wording: achievement ids printed exactly as written, never rewritten toward the JD.
+    location: contact-line location note; overrides the profile's relocation rules."""
     include = include or set()
+    keep_wording = keep_wording or set()
     print("Loading embedding model...", file=sys.stderr)
     embedding_model = SentenceTransformer(EMBEDDING_MODEL)
 
     print("Classifying JD...", file=sys.stderr)
     classification = classify_jd(jd_text)
 
-    profile = with_skills(with_relocation(load_profile(), jd_text), classification.role_category)
+    profile = with_skills(with_relocation(load_profile(), jd_text, location), classification.role_category)
     # Only achievements of roles the profile lists go on the CV; the rest stay in
     # the bank (e.g. removed working-student roles) but are never retrieved or used.
     cv_roles = {(e.company, e.role) for e in profile.experience}
@@ -107,6 +117,10 @@ def run_pipeline(jd_text: str, top_k: int = 3, include: Optional[Set[str]] = Non
     unknown = include - cv_ids
     if unknown:
         print(f"Error: --include ids not on the CV: {', '.join(sorted(unknown))}", file=sys.stderr)
+        sys.exit(1)
+    unknown = keep_wording - cv_ids
+    if unknown:
+        print(f"Error: --keep-wording ids not on the CV: {', '.join(sorted(unknown))}", file=sys.stderr)
         sys.exit(1)
 
     # For each achievement, remember the JD requirement it matched best, so it
@@ -157,6 +171,7 @@ def run_pipeline(jd_text: str, top_k: int = 3, include: Optional[Set[str]] = Non
     }
 
     rewrite_notes = ["## Rewrites", ""]
+    over_limit: List[Achievement] = []  # matched a requirement but cut by a role's max_bullets
     roles: List[CVRole] = []
     for entry in profile.experience:
         role_achievements = [a for a in achievements if a.company == entry.company and a.role == entry.role]
@@ -183,6 +198,7 @@ def run_pipeline(jd_text: str, top_k: int = 3, include: Optional[Set[str]] = Non
             others = [a for a in role_achievements if a.id not in include and a.id not in best_match]
             chosen = pinned + matched
             if limit is not None:
+                over_limit += chosen[max(limit, len(pinned)):]
                 chosen = chosen[:max(limit, len(pinned))]
             chosen += others[:max(0, fill_to - len(chosen))]
             role_achievements = sorted(
@@ -195,7 +211,7 @@ def run_pipeline(jd_text: str, top_k: int = 3, include: Optional[Set[str]] = Non
         for achievement in role_achievements:
             text = achievement.text
             match = best_match.get(achievement.id)
-            if match is not None:
+            if match is not None and achievement.id not in keep_wording:
                 print(f"Rewriting {achievement.id} toward: {match[1]}", file=sys.stderr)
                 rewrite_result = rewrite_achievement(
                     achievement,
@@ -287,6 +303,10 @@ def run_pipeline(jd_text: str, top_k: int = 3, include: Optional[Set[str]] = Non
         output_lines.append("")
     output_lines.extend(rewrite_notes)
     output_lines.append("")
+    if over_limit:
+        output_lines.extend(["## Matched but over the role's max_bullets (pin with --include)", ""])
+        output_lines.extend(f"- `{a.id}` ({a.role}): {a.text}" for a in over_limit)
+        output_lines.append("")
     if dropped:
         output_lines.extend(["## Dropped to fit page 1", ""])
         output_lines.extend(f"- `{b.achievement_id}`: {b.text}" for b in dropped)
@@ -318,6 +338,18 @@ def main():
         help="Comma-separated achievement ids that must be on the CV, e.g. ach_11,ach_13.",
     )
     parser.add_argument(
+        "--keep-wording",
+        type=str,
+        default="",
+        help="Comma-separated achievement ids kept exactly as written (not rewritten toward the JD), e.g. ach_14.",
+    )
+    parser.add_argument(
+        "--location",
+        type=str,
+        default=None,
+        help="Location note for the contact line, overriding data/profile.json's relocation rules.",
+    )
+    parser.add_argument(
         "--lang",
         choices=["en", *LANGUAGES],
         default="en",
@@ -331,7 +363,8 @@ def main():
 
     jd_text = read_jd_text(args)
     include = {i.strip() for i in args.include.split(",") if i.strip()}
-    result = run_pipeline(jd_text, top_k=args.top_k, include=include, lang=args.lang)
+    keep_wording = {i.strip() for i in args.keep_wording.split(",") if i.strip()}
+    result = run_pipeline(jd_text, top_k=args.top_k, include=include, lang=args.lang, keep_wording=keep_wording, location=args.location)
 
     print(result.review_md)
 

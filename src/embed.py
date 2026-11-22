@@ -6,7 +6,7 @@ import os
 from typing import List
 from sentence_transformers import SentenceTransformer
 from qdrant_client import QdrantClient
-from qdrant_client.models import Distance, VectorParams, PointStruct
+from qdrant_client.models import Distance, PointIdsList, PointStruct, VectorParams
 
 from ingest import Achievement, load_achievements
 import logging
@@ -64,6 +64,14 @@ def embed_and_index(achievements: List[Achievement], client: QdrantClient, model
 
     client.upsert(collection_name=COLLECTION_NAME, points=points)
     print(f"Upserted {len(points)} achievements into '{COLLECTION_NAME}'.")
+
+    # Drop points of achievements removed from the file, or retrieval keeps finding them.
+    current = {p.id for p in points}
+    indexed, _ = client.scroll(collection_name=COLLECTION_NAME, limit=10_000, with_payload=False)
+    stale = [p.id for p in indexed if p.id not in current]
+    if stale:
+        client.delete(collection_name=COLLECTION_NAME, points_selector=PointIdsList(points=stale))
+        print(f"Deleted {len(stale)} removed achievements from '{COLLECTION_NAME}': {stale}")
 
 
 def run():
