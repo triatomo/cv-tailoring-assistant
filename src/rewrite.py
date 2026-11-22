@@ -29,7 +29,8 @@ Rules (do not break these):
 2. If none of the provided terminology maps cleanly onto the original bullet,
    return the original bullet unchanged rather than forcing a fit.
 3. Keep the rewrite roughly the same length as the original.
-4. Return ONLY the rewritten bullet text, no preamble, no explanation, no quotes.
+4. Keep these key phrases word-for-word if they appear: {highlights}
+5. Return ONLY the rewritten bullet text, no preamble, no explanation, no quotes.
 """
 
 
@@ -47,6 +48,7 @@ def rewrite_achievement(
         original_text=achievement.text,
         terminology=", ".join(terminology) if terminology else "(none provided)",
         requirement=requirement,
+        highlights="; ".join(f'"{h}"' for h in achievement.highlights) or "(none)",
     )
 
     rewritten = call_llm(prompt, max_tokens=512).strip().strip('"')

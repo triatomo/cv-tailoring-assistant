@@ -5,6 +5,7 @@ using the LLM. This output is used downstream to bias retrieval (e.g., up-weight
 AI Engineer JD) and to drive the grounded-rewrite terminology substitution.
 """
 import json
+import re
 from typing import List
 from pydantic import BaseModel
 
@@ -13,6 +14,7 @@ from llm_client import call_llm
 ROLE_CATEGORIES = [
     "AI/ML Engineer",
     "Data Engineer",
+    "AI Data Engineer",
     "BI/Analytics",
     "Platform/Infra",
     "Data Scientist",
@@ -21,6 +23,7 @@ ROLE_CATEGORIES = [
 
 
 class JDClassification(BaseModel):
+    job_title: str = ""  # exactly as the JD writes it
     role_category: str
     key_terminology: List[str]
     key_requirements: List[str]
@@ -33,18 +36,33 @@ Job description:
 {jd_text}
 ---
 
-Do two things:
-1. Classify this JD into exactly one of these role categories: {categories}
-2. Extract two lists:
+Do three things:
+1. Copy the job title exactly as the JD writes it (e.g. "Senior AI Engineer - Growth").
+2. Classify this JD into exactly one of these role categories: {categories}
+   Use "AI Data Engineer" when the role is both data engineering and AI/LLM/ML
+   engineering (e.g. "AI Data Engineer", data pipelines feeding LLM or ML systems).
+3. Extract two lists:
    - key_terminology: the specific vocabulary/terms this JD uses that a candidate
      should mirror in their CV (e.g., "semantic layer", "grain", "drift detection",
      "governed metrics"). Focus on distinctive, role-specific terms, not generic
      words like "experience" or "team".
-   - key_requirements: the concrete skills/requirements listed, as short phrases
-     (e.g., "5+ years SQL", "Kubernetes", "dbt or LookML experience").
+   - key_requirements: everything the JD asks the candidate to do or have, as short
+     phrases in the order the JD lists them. Cover BOTH the responsibilities ("what
+     you'll do", e.g. "build and maintain data infrastructure and pipelines",
+     "collaborate with external partners to resolve problems") AND the skills and
+     experience lines (e.g. "incident management and test automation", "Kubernetes",
+     "dbt or LookML experience"). Keep every line -- do not reduce the JD to tool
+     names. Leave out degrees, total years of experience on their own, languages,
+     soft skills on their own ("strong communication"), and location or remote-work
+     conditions: achievements can't demonstrate those.
+
+The candidate's CV material is in English, so write key_terminology and
+key_requirements in English, translating them if the JD is in another language
+(keep tool and product names as written). Copy job_title as written, untranslated.
 
 Respond with ONLY a JSON object, no other text, matching this exact shape:
 {{
+  "job_title": "<job title as written in the JD>",
   "role_category": "<one of {categories}>",
   "key_terminology": ["...", "..."],
   "key_requirements": ["...", "..."]
@@ -76,7 +94,32 @@ def classify_jd(jd_text: str) -> JDClassification:
         raw_text = raw_text[start : end + 1]
 
     data = json.loads(raw_text)
-    return JDClassification(**data)
+    classification = JDClassification(**data)
+    classification.role_category = category_from_title(classification.job_title, classification.role_category)
+    return classification
+
+
+AI_TITLE = re.compile(r"\b(AI|ML|LLM|GenAI|Machine Learning|Artificial Intelligence)\b", re.IGNORECASE)
+# Checked in order; the first matching title pattern decides the category.
+TITLE_CATEGORIES = [
+    (re.compile(r"\banalytics\b|\bBI\b|business intelligence", re.IGNORECASE), "BI/Analytics"),
+    (re.compile(r"\bdata scien", re.IGNORECASE), "Data Scientist"),
+    (re.compile(r"\bdata engineer", re.IGNORECASE), "Data Engineer"),
+    (re.compile(r"\bplatform\b|\binfrastructure\b|\bdevops\b|\bSRE\b", re.IGNORECASE), "Platform/Infra"),
+]
+
+
+def category_from_title(job_title: str, llm_category: str) -> str:
+    """The JD title outranks the LLM's guess when it is clear: "Analytics Engineer" is
+    BI/Analytics, never an AI category. AI categories need an AI term in the title."""
+    if AI_TITLE.search(job_title):
+        return "AI Data Engineer" if re.search(r"\bdata\b", job_title, re.IGNORECASE) else "AI/ML Engineer"
+    for pattern, category in TITLE_CATEGORIES:
+        if pattern.search(job_title):
+            return category
+    if llm_category in ("AI Data Engineer", "AI/ML Engineer"):
+        return "Other"  # no AI in the title: don't let the LLM call it an AI role
+    return llm_category
 
 
 if __name__ == "__main__":

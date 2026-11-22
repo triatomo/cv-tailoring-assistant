@@ -14,6 +14,11 @@ Ollama setup (one-time, free):
 """
 import os
 import requests
+from dotenv import load_dotenv
+
+# Load .env here, before the settings below are read: modules import this one
+# before cli.py's own load_dotenv() runs.
+load_dotenv()
 
 LLM_BACKEND = os.getenv("LLM_BACKEND", "ollama")  # "ollama" or "anthropic"
 OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "llama3.1:8b")
